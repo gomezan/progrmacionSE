@@ -385,5 +385,6 @@ void BOARD_TPM_HANDLER(void)
 {
     /* Clear interrupt flag.*/
     TPM_ClearStatusFlags(BOARD_TPM, kTPM_TimeOverflowFlag);
+	// Se sube la bandera a ser usada en el código principal cada 100 ms
     tpmIsrFlag = true;
 }
