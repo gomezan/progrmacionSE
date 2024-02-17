@@ -223,32 +223,36 @@ int main(void)
     STATE_T state = EVALUATING;
     while (true)
     {
-    	if(tpmIsrFlag)
+    	if(tpmIsrFlag) // Se cumple la interrupción cada 100 ms
     	{
-    		cnt++;
-    		if (cnt >= loop)
+    		cnt++; // Se suma el contador
+    		if (cnt >= loop) // Si el contador llega a 5 se ejecuta la FSM
 			{
-				cnt = 0;
+				cnt = 0; // Se reinicia el contador
 				switch(state)
 				{
-					case EVALUATING:
+					case EVALUATING: // Se evalúa si algún switch sección está encendida
 						if(pulse_1() == 1)
 						{
-							on_sec_1();
-							state = ON_1;
+							// Si el switch 1 está encendido
+							on_sec_1();   // Se enciende la sección 1
+							state = ON_1; // Se actualiza el estado a ON_1
 						}
 						else if(pulse_2() == 1)
 						{
-							on_sec_2();
-							state = ON_2;
+							// Si el switch 2 está encendido
+							on_sec_2();   // Se enciende la sección 2
+							state = ON_2; // Se actualiza el estado a ON_2
 						}
 						else if(pulse_3() == 1)
 						{
-							on_sec_3();
-							state = ON_3;
+							// Si el switch 3 está encendido
+							on_sec_3();   // Se enciende la sección 3
+							state = ON_3; // Se actualiza el estado a ON_3
 						}
 						else
 						{
+							// En cualquier otro caso se repite el estado
 							state = EVALUATING;
 						}
 					break;
