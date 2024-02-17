@@ -183,10 +183,6 @@ int main(void)
     /* Select the clock source for the TPM counter as kCLOCK_PllFllSelClk */
     CLOCK_SetTpmClock(1U);
 
-    /* Print a note to terminal */
-    PRINTF("\r\nTPM example to simulate a timer\r\n");
-    PRINTF("\r\nYou will see a \"-\" or \"|\" in terminal every 1 second:\r\n");
-
     TPM_GetDefaultConfig(&tpmInfo);
 
 #ifndef TPM_PRESCALER
@@ -364,7 +360,7 @@ int main(void)
     }
 }
 
-//Función que permite controlar el reloj para generar la señal 
+//Funciï¿½n que permite controlar el reloj para generar la seï¿½al 
 void BOARD_TPM_HANDLER(void)
 {
     /* Clear interrupt flag.*/
