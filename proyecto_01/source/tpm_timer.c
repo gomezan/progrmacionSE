@@ -226,7 +226,7 @@ int main(void)
     	if(tpmIsrFlag) // Se cumple la interrupción cada 100 ms
     	{
     		cnt++; // Se suma el contador
-    		if (cnt >= loop) // Si el contador llega a 5 se ejecuta la FSM
+    		if (cnt >= loop) // Si el contador llega a 5 se ejecuta la FSM, eso es cada 500 ms
 			{
 				cnt = 0; // Se reinicia el contador
 				switch(state)
@@ -258,29 +258,35 @@ int main(void)
 					break;
 
 					case ON_1:
+						// Como la ejecución es 500 ms después se apaga la sección 1
 						off_sec_1();
-						state = OFF_1;
+						state = OFF_1; // Se actualiza el estado a OFF_1
 					break;
 
 					case OFF_1:
+						// 500 ms después de apagar la sección se debe cambiar de sección
 						if(pulse_2() == 1)
 						{
-							on_sec_2();
-							state = ON_2;
+							// Si el switch 2 está encendido
+							on_sec_2();   // Se enciende la sección 2
+							state = ON_2; // Se actualiza al estado ON_2
 						}
 						else if(pulse_3() == 1)
 						{
-							on_sec_3();
-							state = ON_3;
+							// Si el switch 3 está encendido y el 2 no
+							on_sec_3();   // Se enciende la sección 3
+							state = ON_3; // Se actualiza al estado ON_3
 						}
 						else if(pulse_1() == 1)
 						{
-							on_sec_1();
-							state = ON_1;
+							// Si el switch 1 está encendido y los demás no
+							on_sec_1();   // Se enciende la sección 1
+							state = ON_1; // Se actualiza al estado ON_1
 						}
 						else
 						{
-							state = EVALUATING;
+							// En cualquier otro caso, con ninguna sección encendida
+							state = EVALUATING; // Se actualiza al estado EVALUATING
 						}
 					break;
 
