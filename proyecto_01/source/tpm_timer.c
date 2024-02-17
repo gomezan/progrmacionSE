@@ -213,6 +213,12 @@ int main(void)
 
     cnt = 0;
 
+	// Estados para la máquina de estados a usar
+	// EVALUATING - el estado donde se evalúa los distintos switches
+	// ON_# - estados donde se enciende cada sección y se espera al estado apagado
+	// OFF_# - estados donde se apaga cada sección y se evalúa la sección siguiente
+	//         Si ninguna sección está encendida se vuelve al estado EVALUATING
+
     typedef enum {EVALUATING,ON_1,OFF_1,ON_2,OFF_2,ON_3,OFF_3} STATE_T;
     STATE_T state = EVALUATING;
     while (true)
