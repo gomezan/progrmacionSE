@@ -96,39 +96,34 @@ volatile uint32_t milisecondCounts = 0U;
 // recordar que la lógica está inversa
 // el común va a Vcc
 // para encender el 7 segmentos, el segmento debe estar en 0V
+
 void on_sec_1() // enciende leds de sección 1
 {
-	// GPIO_PortToggle(BOARD_INITPINS_PIN_D2_GPIO, 1u << BOARD_INITPINS_PIN_D2_PIN);
 	GPIO_PortClear(BOARD_INITPINS_PIN_D2_GPIO, 1u << BOARD_INITPINS_PIN_D2_PIN);
 }
 
 void on_sec_2() // enciende leds de sección 2
 {
-    // GPIO_PortToggle(BOARD_INITPINS_PIN_D4_GPIO, 1u << BOARD_INITPINS_PIN_D4_PIN);
 	GPIO_PortClear(BOARD_INITPINS_PIN_D4_GPIO, 1u << BOARD_INITPINS_PIN_D4_PIN);
 }
 
 void on_sec_3() // enciende leds de sección 3
 {
-    // GPIO_PortToggle(BOARD_INITPINS_PIN_D6_GPIO, 1u << BOARD_INITPINS_PIN_D6_PIN);
 	GPIO_PortClear(BOARD_INITPINS_PIN_D6_GPIO, 1u << BOARD_INITPINS_PIN_D6_PIN);
 }
 
 void off_sec_1() // apaga leds de sección 1
 {
-	// on_sec_1();
 	GPIO_PortSet(BOARD_INITPINS_PIN_D2_GPIO, 1u << BOARD_INITPINS_PIN_D2_PIN);
 }
 
 void off_sec_2() // apaga leds de sección 2
 {
-	// on_sec_2();
 	GPIO_PortSet(BOARD_INITPINS_PIN_D4_GPIO, 1u << BOARD_INITPINS_PIN_D4_PIN);
 }
 
 void off_sec_3() // apaga leds de sección 3
 {
-	// on_sec_3();
 	GPIO_PortSet(BOARD_INITPINS_PIN_D6_GPIO, 1u << BOARD_INITPINS_PIN_D6_PIN);
 }
 
@@ -170,17 +165,17 @@ int pulse_3() // revisa switch 3, si es HIGH devuelve 1, si es FALSE devuelve 0
 
 int main(void)
 {
+	// Variables de control del tiempo para pasar de 100 ms a 500 ms
     uint32_t cnt = 0;
     uint32_t loop = 5;
-    //uint32_t secondLoop = 1000U;
-    //const char *signals = "-|";
     tpm_config_t tpmInfo;
 
-    /* Board pin, clock, debug console init */
+    /* Board pin, clock, debug console inicialización */
     BOARD_InitPins();
     BOARD_BootClockRUN();
     BOARD_InitDebugConsole();
-    /* Select the clock source for the TPM counter as kCLOCK_PllFllSelClk */
+
+    /* Seleccionar la fuente de reloj para el TPM counter en kCLOCK_PllFllSelClk */
     CLOCK_SetTpmClock(1U);
 
     TPM_GetDefaultConfig(&tpmInfo);
@@ -189,16 +184,13 @@ int main(void)
 #define TPM_PRESCALER kTPM_Prescale_Divide_128
 #endif
 
-    /* TPM clock divide by TPM_PRESCALER */
+    /* TPM clock dividido por TPM_PRESCALER */
     tpmInfo.prescale = TPM_PRESCALER;
 
-    /* Initialize TPM module */
+    /* Inicializar TPM module */
     TPM_Init(BOARD_TPM, &tpmInfo);
 
-    /*
-     * Set timer period.
-     */
-    
+    /* Dar valor al periodo del timer */
     TPM_SetTimerPeriod(BOARD_TPM, 10000000);
 	//Configura interrupciones con base en el reloj
     TPM_EnableInterrupts(BOARD_TPM, kTPM_TimeOverflowInterruptEnable);
@@ -360,10 +352,10 @@ int main(void)
     }
 }
 
-//Funci�n que permite controlar el reloj para generar la se�al 
+//Función que permite controlar el reloj para generar la señal 
 void BOARD_TPM_HANDLER(void)
 {
-    /* Clear interrupt flag.*/
+    /* Limpiar bandera de interrupción */
     TPM_ClearStatusFlags(BOARD_TPM, kTPM_TimeOverflowFlag);
 	// Se sube la bandera a ser usada en el código principal cada 100 ms
     tpmIsrFlag = true;
