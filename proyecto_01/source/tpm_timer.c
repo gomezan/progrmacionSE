@@ -202,13 +202,13 @@ int main(void)
     /*
      * Set timer period.
      */
-    //TPM_SetTimerPeriod(BOARD_TPM, MSEC_TO_COUNT(6000U, TPM_SOURCE_CLOCK));
+    
     TPM_SetTimerPeriod(BOARD_TPM, 10000000);
-
+	//Configura interrupciones con base en el reloj
     TPM_EnableInterrupts(BOARD_TPM, kTPM_TimeOverflowInterruptEnable);
-
+    //Habilitar interrupciones
     EnableIRQ(BOARD_TPM_IRQ_NUM);
-
+	//Configurar reloj
     TPM_StartTimer(BOARD_TPM, kTPM_SystemClock);
 
     cnt = 0;
@@ -359,28 +359,12 @@ int main(void)
 			}
 
     	}
-    	/*
-        if (tpmIsrFlag)
-        {
-            milisecondCounts++;
-            tpmIsrFlag = false;
-            if (milisecondCounts >= secondLoop)
-            {
-                PRINTF("%c", signals[cnt & 1]);
-                cnt++;
-                on_sec_1();
-                if (cnt >= loop)
-                {
-                    cnt = 0;
-                    off_sec_1();
-                }
-                milisecondCounts = 0U;
-            }
-        }/**/
+    
         __WFI();
     }
 }
 
+//Función que permite controlar el reloj para generar la señal 
 void BOARD_TPM_HANDLER(void)
 {
     /* Clear interrupt flag.*/
