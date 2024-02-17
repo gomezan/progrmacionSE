@@ -285,7 +285,7 @@ int main(void)
 						}
 						else
 						{
-							// En cualquier otro caso, con ninguna switch encendido
+							// En cualquier otro caso, con ningún switch encendido
 							state = EVALUATING; // Se actualiza al estado EVALUATING
 						}
 					break;
@@ -297,6 +297,7 @@ int main(void)
 					break;
 
 					case OFF_2:
+						// 500 ms después de apagar la sección se debe cambiar de sección
 						if(pulse_3() == 1)
 						{
 							// Si el switch 3 está encendido
@@ -323,29 +324,35 @@ int main(void)
 					break;
 
 					case ON_3:
-						off_sec_3();
-						state = OFF_3;
+						// Como pasaron 500 ms
+						off_sec_3();   // Se apaga la sección 3
+						state = OFF_3; // Se actualiza al estado OFF_3
 					break;
 
 					case OFF_3:
+						// 500 ms después de apagar la sección se debe cambiar de sección
 						if(pulse_1() == 1)
 						{
-							on_sec_1();
-							state = ON_1;
+							// Si el switch 1 está encendido
+							on_sec_1();   // Se enciende la sección 1
+							state = ON_1; // Se actualiza al estado ON_1
 						}
 						else if(pulse_2() == 1)
 						{
-							on_sec_2();
-							state = ON_2;
+							// Si el switch 2 está encendido
+							on_sec_2();   // Se enciende la sección 2
+							state = ON_2; // Se actualiza al estado ON_2
 						}
 						else if(pulse_3() == 1)
 						{
-							on_sec_3();
-							state = ON_3;
+							// Si el switch 3 está encendido
+							on_sec_3();   // Se enciende la sección 3
+							state = ON_3; // Se actualiza al estado ON_3
 						}
 						else
 						{
-							state = EVALUATING;
+							// En cualquier otro caso, con ningún switch encendido
+							state = EVALUATING; // Se actualiza al estado EVALUATING
 						}
 					break;
 				}
