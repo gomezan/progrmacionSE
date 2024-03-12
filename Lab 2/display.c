@@ -1,4 +1,4 @@
-/* Adc.c    implementaci�n del m�dulo Display */
+/* display.c    implementaci�n del m�dulo Display */
 
 #include "display.h"
 #include <Tiempo.h>
@@ -7,130 +7,165 @@
 
 extern Tm_Control c_tiempo;
 
-/* Estados */
-#define E_ESPERE_PERIODO      0
-#define E_ESPERE_TO           1
-#define E_ESPERE_EOC          2   
+//Variables de funcionamiento
+#define PERIODO_BASE    160
+#define NUM_MUERTO    -1
+#define TIEMPO_OFF    320
+#define TIEMPO_EOF    16000
+#define TIEMPO_LOW    800
+
 
 /* Rutina para iniciar el m�dulo (su estructura de datos) */   
-char Dp_Inicie (Adc_Control *acp, 
-                 (volatile unsigned char) *d_dato,
-                 (volatile unsigned char) *d_control,
-                 (volatile unsigned char) *d_estado,
-                  Tm_Num n_periodo,
-                  Tm_Contador periodo,
-                  Tm_Num n_to,
-                  Tm_Contador espera)
+char Dp_Inicie (Dp_Control *dp, 
+                   Tm_Num n_periodo, 
+                   Tm_Num n_to10, 
+                   Tm_Num n_to2, 
+                   Tm_Num n_to5)
    {
-   unsigned char n;
+
+
+   dp->flag_eof=dp->flag_ca1 =dp->flag_25=dp->flag_off=0;   
+   dp->digit =NUM_MUERTO;
    
-   acp->d_dato = d_dato;
-   acp->d_control = d_control;
-   acp->d_estado = d_estado;
-                  
-   acp->ch_activo = acp->ch_con_dato = 0;
-   for (n = ADC_NUM_CANALES - 1; n; --n)
-      /* Se inician los valores en 0 aunque no sea imprescindible hacerlo */
-      acp->datos[n] = 0;
-   
-   acp->estado = E_ESPERE_PERIODO;
-   acp->canal = 0;                                                                                                           
-   *d_control = 0;   /* Registro de control con S&H abierto, sin EOC y canal en 0 */
-   
-   acp->n_periodo = n_periodo;
-   acp->periodo = periodo;
-   if ( !Tm_Inicie_periodo(&c_tiempo, n_periodo, periodo) )
+   dp->n_periodo = n_periodo;
+   if ( !Tm_Inicie_periodo(&c_tiempo, n_periodo, PERIODO_BASE) )
       return NO;
       
-   acp->n_to = n_to;
-   acp->espera = espera;
+   dp->n_to10 = n_to10;
+   dp->n_to5 = n_to5;
+   dp->n_to2 = n_to2;
+
+   return SI;
    };
+
+
+//Se encarga de revizar que la lógica de la terminación de comunicación se realize de forma correcta.
+  char Dp_logicaFinRecepcion(Dp_Control *dp, unsigned int tam){
+
+   if(!(tam)){
+
+      if(dp->flag_eof){
+
+         if(Tm_Hubo_timeout(&c_tiempo, dp->n_to10)){
+            dp->finish=1;
+         }
+
+      return No;
+
+      }else{
+         dp->flag_eof=1;
+         Tm_Inicie_timeout(&c_tiempo, acp->n_to10, TIEMPO_EOF);
+          return No;
+      } 
+
+   }
+   return SI;
+
+  } 
+
+
+//Se encarga de revizar que la lógica del apagado del display se realize de forma correcta.
+  char Dp_logicaApagado(Dp_Control *dp){
+  
+  if(dp->flag_off){
+
+      if(Tm_Hubo_timeout(&c_tiempo, dp->n_to2)){
+         dp->flag_off=0;
+      } else {
+         return NO;
+      }
+  }
+
+  return SI;
+  } 
                   
 /* Rutina para procesar el m�dulo (dentro del loop de polling) */				
-void Dp_Procese (Adc_Control *acp)
-   {
-   switch (acp->estado)
-      {
-      case E_ESPERE_PERIODO:
-         if ( Tm_Hubo_periodo(&c_tiempo, acp->n_periodo) )
-            {
-            Tm_Baje_periodo(&c_tiempo, acp->n_periodo);
-            if (acp->ch_activo & (1 << adc->canal))
-               {
-               *(acp->d_control) = ADCCNTL_F_SAH | (ADCCNTL_F_CH & acp->canal);
-               Tm_Inicie_timeout(&c_tiempo, acp->n_to, acp->espera);
-               acp->estado = E_ESPERE_TO;
-               }
-               else
-               {
-               ++(adc->canal);
-               if (adc->canal >= ADC_NUM_CANALES)
-                  adc->canal = 0;
-               };
-            };
-         break;
-      case E_ESPERE_TO:
-         if  ( Tm_Hubo_timeout(&c_tiempo, acp->n_to) )
-            {
-            *(acp->d_control) &= ~ADCCNTL_F_SAH;
-            *(acp->d_control) |= ADCCNTL_F_SOC;
-            acp->estado = E_ESPERE_EOC;
-            };
-         break;
-      case E_ESPERE_EOC:
-         if (*(adc->estado) & ADC_F_EOC)
-            {
-            acp->datos[adc->canal] = *(adc->d_dato);
-            acp->ch_con_dato |= (1 << adc->canal);
-            ++(adc->canal);
-            if (adc->canal >= ADC_NUM_CANALES)
-               adc->canal = 0;
-            acp->estado = E_ESPERE_PERIODO;
-            };
-         break;
-      };
+void Dp_Procese (Dp_Control *dp){
+
+   unsigned char raw_digit;
+   
+   
+   //Verificar si es necesario enviar un XON
+   //PENDIENTE
+   unsigned int tam=getTamBuffer();
+
+   if(tam<=24){
+     sendXON() 
+   }
+   //Verificar estado de timeout de 2 s (display apagado)
+   char on=Dp_logicaApagado(dp);
+   
+   
+   if(on){
+
+      //Verificar el estado de fin de archivo
+
+      char inactive=Dp_logicaFinRecepcion(dp,tam);
+      if(inactive){
+
+         //Verificar estado de timeout de 5 s (baja intensidad)
+
+         if(dp->flag_25){
+            if( Tm_Hubo_timeout(&c_tiempo, acp->n_to5)){
+               dp->flag_eof=0;
+               Tm_Termine_timeout (&c_tiempo,acp->n_to5);
+               db->flag_finish=0;
+
+            }
+         }
+
+         //Leer caracter del buffer
+         //PENDIENTE
+         raw_digit=requestBuffer();
+
+         //Bajar bandera eof si esta encendida
+
+         if(dp->flag_eof){
+            dp->flag_eof=0;
+
+         }
+
+         //Identificar el caracter del buffer
+
+         if(raw_digit=="&"){
+         dp->flag_ca1=1;
+ 
+         } else if(raw_digit=="$"){
+         dp->flag_ca1=0;
+
+         }  else if(raw_digit=="%"){
+         Tm_Inicie_timeout(&c_tiempo, acp->n_to2, TIEMPO_OFF);
+         dp->digit=NUM_MUERTO;
+   
+         }  else if (raw_digit=="#"){
+
+            if(dp->flag_25){
+
+            Tm_Termine_timeout (&c_tiempo,acp->n_to5);
+            Tm_Inicie_timeout(&c_tiempo, acp->n_to5, TIEMPO_LOW);
+
+            } else{
+            Tm_Inicie_timeout(&c_tiempo, acp->n_to5, TIEMPO_LOW);
+            }
+
+         dp->flag_25=1;
+   
+         // Si no es un caracter especial entonces es un digito crudo
+         } else{
+         dp->digit=raw_digit;
+         }
+
+      }     
+
+   }
+
+   //Se imprime cualquier digito dentro de la variable Digit
+   sendDigitDisplay();
+
    };
 
 /* ===== RUTINAS DE INTERFAZ ====== */
 /* Rutina para activar un canal. Indica si se pudo activar. */
-char Adc_Active_canal (Adc_Control *acp, 
-                       unsigned char canal)
-   {
-   if (canal >= ADC_NUM_CANALES)
-      return NO;
-   
-   acp->ch_activo |= (1 << adc->canal);
-   
-   return SI;
-   };                       
 
-/* Rutina para desactivar un canal. Indica si se pudo desactivar. */
-char Adc_Desactive_canal (Adc_Control *acp, 
-                       unsigned char canal)
-   {
-   if (canal >= ADC_NUM_CANALES)
-      return NO;
-   
-   acp->ch_activo &= ~(1 << adc->canal);
-   
-   return SI;
-   };                       
-
-/* Rutina para leer el dato de un canal. Indica si hay un dato v�lido. */
-char Adc_Dato_canal (Adc_Control *acp, 
-                     unsigned char canal,
-                     unsigned char *dp)
-   {
-   if (canal >= ADC_NUM_CANALES)
-      return NO;
-   
-   if (acp->ch_con_dato & (1 << adc->canal))
-      {
-      *dp = adc->datos[canal];
-      return SI;
-      };
-
-   return NO;
-   };                       
 
 /* == FIN DE RUTINAS DE INTERFAZ == */
