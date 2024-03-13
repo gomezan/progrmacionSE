@@ -75,23 +75,23 @@ char Bf_Bajar_Dato(Buffer_Control *buf, Bf_data *read)
 
     Bf_pointer free = 0;
 
-    if(Bf_Libre(buf,&free))
+    // Se revisa si hay datos en el buffer
+    // Como el contador lleva los datos adentro del buffer, si es mayor que 0, hay al menos un dato
+    if(buf->cont > 0)
     {
-        if(free < buf->total)
+        (*read) = (buf->datos)[buf->read];
+        if(buf->read < (buf->total-1))
         {
-            (*read) = (buf->datos)[buf->read];
-            if(buf->read < (buf->total-1))
-            {
-                ++(buf->read);
-            }
-            else
-            {
-                buf->read = 0;
-            }
-            buf->full = 0;
-
-            return TRUE;
+            ++(buf->read);
         }
+        else
+        {
+            buf->read = 0;
+        }
+        --(buf->cont);
+        buf->full = 0;
+
+        return TRUE;
     }
 
     return FALSE;
@@ -103,20 +103,7 @@ char Bf_Libre(Buffer_Control *buf, Bf_pointer *free)
     if(!(buf->active))
         return FALSE;
 
-    if(buf->full == 1)
-    {
-        (*free) = 0;
-    }
-    else
-    {
-        if(buf->write < buf->read)
-        {
-            (*free) = buf->read - buf->write;
-        }
-        else
-        {
-            (*free) = buf->total - buf->write + buf->read;
-        }
-    }
+    (*free) = buf->total - buf->cont;
+    
     return TRUE;
 }
