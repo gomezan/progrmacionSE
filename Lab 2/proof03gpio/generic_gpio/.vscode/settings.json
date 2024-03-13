@@ -1,0 +1,17 @@
+{
+  "C_Cpp.intelliSenseEngine": "default",
+  "idf.portWin": "COM10",
+  "idf.adapterTargetName": "esp32",
+  "idf.flashType": "UART",
+  "files.associations": {
+    "timer.h": "c",
+    "gpio.h": "c",
+    "*.tcc": "c",
+    "iomanip": "c",
+    "istream": "c",
+    "ostream": "c",
+    "regex": "c",
+    "*.inc": "c",
+    "gptimer_types.h": "c"
+  }
+}
