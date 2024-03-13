@@ -2,10 +2,11 @@
 
 #include "display.h"
 #include <Tiempo.h>
-#include <Rx.h>
+#include <Buffer.h>
 
 
 extern Tm_Control c_tiempo;
+extern Buffer_Control buff;
 
 //Variables de funcionamiento
 #define PERIODO_BASE    160
@@ -40,9 +41,9 @@ char Dp_Inicie (Dp_Control *dp,
 
 
 //Se encarga de revizar que la lógica de la terminación de comunicación se realize de forma correcta.
-  char Dp_logicaFinRecepcion(Dp_Control *dp, unsigned int tam){
+  char Dp_logicaFinRecepcion(Dp_Control *dp, Buffer_Control *buf){
 
-   if(!(tam)){
+   if(!(Bf_Lleno(&buf))){
 
       if(dp->flag_eof){
 
@@ -82,29 +83,17 @@ char Dp_Inicie (Dp_Control *dp,
 /* Rutina para procesar el m�dulo (dentro del loop de polling) */				
 void Dp_Procese (Dp_Control *dp){
 
-   unsigned char raw_digit;
-   
-   
-   //Verificar si es necesario enviar un XON
-   //PENDIENTE
-   unsigned int tam=getTamBuffer();
+   Bf_data raw_digit;
 
-   if(tam<=24){
-     sendXON() 
-   }
-   //Verificar estado de timeout de 2 s (display apagado)
    char on=Dp_logicaApagado(dp);
-   
-   
+
    if(on){
 
       //Verificar el estado de fin de archivo
-
-      char inactive=Dp_logicaFinRecepcion(dp,tam);
+      char inactive=Dp_logicaFinRecepcion(dp, buff);
       if(inactive){
 
          //Verificar estado de timeout de 5 s (baja intensidad)
-
          if(dp->flag_25){
             if( Tm_Hubo_timeout(&c_tiempo, acp->n_to5)){
                dp->flag_eof=0;
@@ -115,8 +104,7 @@ void Dp_Procese (Dp_Control *dp){
          }
 
          //Leer caracter del buffer
-         //PENDIENTE
-         raw_digit=requestBuffer();
+         Bf_Bajar_Dato(&buff, &raw_digit);
 
          //Bajar bandera eof si esta encendida
 
@@ -160,7 +148,7 @@ void Dp_Procese (Dp_Control *dp){
    }
 
    //Se imprime cualquier digito dentro de la variable Digit
-   sendDigitDisplay();
+   send_digits_display(dp->digit,dp->flag_25,dp->flag_ca1);
 
    };
 

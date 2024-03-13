@@ -4,6 +4,7 @@
 #define  DISPLAY_H
 
 #include <Tiempo.h>
+#include <Buffer.h>
 
 typedef struct Dp_Control Dp_Control;
 
@@ -17,9 +18,8 @@ struct Dp_Control
                   flag_off;  //Modo display apagado 
                
    
-   /* Control de la m�quina de estados */
-   unsigned char digit;
-   
+   /* Alamacena el número a imprimir */
+   Bf_data digit;
    
    /* Interfaz al m�dulo de tiempo */
    Tm_Num   n_periodo,
