@@ -3,7 +3,7 @@
 
 #define  BUFFER_H
 
-typedef unsigned int Bf_data;
+typedef unsigned char Bf_data;
 
 typedef unsigned char Bf_pointer;
 
@@ -34,6 +34,15 @@ void Bf_Inicie(Buffer_Control *buf, Bf_data *datos, Bf_pointer total);
 
 /* Rutina para verificar si el buffer está o no lleno */
 char Bf_Lleno(Buffer_Control *buf);
+
+/* Rutina para verificar si el buffer está vacío */
+char Bf_Vacio(Buffer_Control *buf);
+
+/* Rutina para verificar si el buffer está vacío */
+char Bf_75_Lleno(Buffer_Control *buf);
+
+/* Rutina para verificar si el buffer está vacío */
+char Bf_75_Vacio(Buffer_Control *buf);
 
 /* Rutina para subir un dato al buffer */
 char Bf_Subir_Dato(Buffer_Control *buf, Bf_data write);

@@ -1,9 +1,9 @@
-/* display.c    implementaci�n del m�dulo Display */
+/* display.c    implementaci�n del módulo Display */
 
 #include "display.h"
 #include <Tiempo.h>
 #include <Buffer.h>
-
+#include "Varios.h"
 
 extern Tm_Control c_tiempo;
 extern Buffer_Control buff;
@@ -11,12 +11,12 @@ extern Buffer_Control buff;
 //Variables de funcionamiento
 #define PERIODO_BASE    160
 #define NUM_MUERTO    -1
-#define TIEMPO_OFF    320
-#define TIEMPO_EOF    16000
-#define TIEMPO_LOW    800
+#define TIEMPO_OFF    320       // TO de 2  segundos
+#define TIEMPO_EOF    16000     // TO de 10 segundos
+#define TIEMPO_LOW    800       // TO de 5  segundos
 
 
-/* Rutina para iniciar el m�dulo (su estructura de datos) */   
+/* Rutina para iniciar el módulo (su estructura de datos) */   
 char Dp_Inicie (Dp_Control *dp, 
                    Tm_Num n_periodo, 
                    Tm_Num n_to10, 
@@ -43,20 +43,20 @@ char Dp_Inicie (Dp_Control *dp,
 //Se encarga de revizar que la lógica de la terminación de comunicación se realize de forma correcta.
   char Dp_logicaFinRecepcion(Dp_Control *dp, Buffer_Control *buf){
 
-   if(!(Bf_Lleno(&buf))){
+   if(Bf_Vacio(buf)){
 
       if(dp->flag_eof){
 
          if(Tm_Hubo_timeout(&c_tiempo, dp->n_to10)){
-            dp->finish=1;
+            dp->flag_finish=1;
          }
 
-      return No;
+      return NO;
 
       }else{
          dp->flag_eof=1;
-         Tm_Inicie_timeout(&c_tiempo, acp->n_to10, TIEMPO_EOF);
-          return No;
+         Tm_Inicie_timeout(&c_tiempo, dp->n_to10, TIEMPO_EOF);
+          return NO;
       } 
 
    }
@@ -80,7 +80,7 @@ char Dp_Inicie (Dp_Control *dp,
   return SI;
   } 
                   
-/* Rutina para procesar el m�dulo (dentro del loop de polling) */				
+/* Rutina para procesar el módulo (dentro del loop de polling) */				
 void Dp_Procese (Dp_Control *dp){
 
    Bf_data raw_digit;
@@ -90,15 +90,15 @@ void Dp_Procese (Dp_Control *dp){
    if(on){
 
       //Verificar el estado de fin de archivo
-      char inactive=Dp_logicaFinRecepcion(dp, buff);
-      if(inactive){
+      char active=Dp_logicaFinRecepcion(dp, &buff);
+      if(active){
 
          //Verificar estado de timeout de 5 s (baja intensidad)
          if(dp->flag_25){
-            if( Tm_Hubo_timeout(&c_tiempo, acp->n_to5)){
+            if( Tm_Hubo_timeout(&c_tiempo, dp->n_to5)){
                dp->flag_eof=0;
-               Tm_Termine_timeout (&c_tiempo,acp->n_to5);
-               db->flag_finish=0;
+               Tm_Termine_timeout (&c_tiempo,dp->n_to5);
+               dp->flag_finish=0;
 
             }
          }
@@ -110,30 +110,31 @@ void Dp_Procese (Dp_Control *dp){
 
          if(dp->flag_eof){
             dp->flag_eof=0;
-
+            dp->flag_finish = 0;
+            Tm_Termine_timeout(&c_tiempo,dp->n_to10);
          }
 
          //Identificar el caracter del buffer
 
-         if(raw_digit=="&"){
+         if(raw_digit=='&'){
          dp->flag_ca1=1;
  
-         } else if(raw_digit=="$"){
+         } else if(raw_digit=='$'){
          dp->flag_ca1=0;
 
-         }  else if(raw_digit=="%"){
-         Tm_Inicie_timeout(&c_tiempo, acp->n_to2, TIEMPO_OFF);
+         }  else if(raw_digit=='%'){
+         Tm_Inicie_timeout(&c_tiempo, dp->n_to2, TIEMPO_OFF);
          dp->digit=NUM_MUERTO;
    
-         }  else if (raw_digit=="#"){
+         }  else if (raw_digit=='#'){
 
             if(dp->flag_25){
 
-            Tm_Termine_timeout (&c_tiempo,acp->n_to5);
-            Tm_Inicie_timeout(&c_tiempo, acp->n_to5, TIEMPO_LOW);
+            Tm_Termine_timeout (&c_tiempo,dp->n_to5);
+            Tm_Inicie_timeout(&c_tiempo, dp->n_to5, TIEMPO_LOW);
 
             } else{
-            Tm_Inicie_timeout(&c_tiempo, acp->n_to5, TIEMPO_LOW);
+            Tm_Inicie_timeout(&c_tiempo, dp->n_to5, TIEMPO_LOW);
             }
 
          dp->flag_25=1;
@@ -148,7 +149,7 @@ void Dp_Procese (Dp_Control *dp){
    }
 
    //Se imprime cualquier digito dentro de la variable Digit
-   send_digits_display(dp->digit,dp->flag_25,dp->flag_ca1);
+   send_digits_display(dp->digit,dp->flag_25,dp->flag_ca1,dp->flag_off,dp->flag_finish);
 
    };
 

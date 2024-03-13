@@ -3,7 +3,7 @@
 
 char print_digit(char digit);
 
-char send_digits_display(char digit, char flag_25, char flag_CA1, char flag_TO10)
+char send_digits_display(char digit, char flag_25, char flag_CA1, char flag_off, char flag_TO10)
 {
     static cont = 0;
 
@@ -31,6 +31,12 @@ char send_digits_display(char digit, char flag_25, char flag_CA1, char flag_TO10
     else
     {
         cont = 0;
+    }
+
+    if(flag_off)
+    {
+        // Apagado
+        digit = 0xF0;
     }
 
     if(flag_TO10 == 1)

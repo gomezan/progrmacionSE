@@ -9,7 +9,7 @@
 typedef struct Dp_Control Dp_Control;
 
 struct Dp_Control
-                  
+{                  
    /* Banderas */
    unsigned char  flag_eof, //Fin de archivo
                   flag_finish, //Fin de comunicacion
@@ -18,10 +18,10 @@ struct Dp_Control
                   flag_off;  //Modo display apagado 
                
    
-   /* Alamacena el número a imprimir */
+   /* Almacena el número a imprimir */
    Bf_data digit;
    
-   /* Interfaz al m�dulo de tiempo */
+   /* Interfaz al módulo de tiempo */
    Tm_Num   n_periodo,
             n_to10,
             n_to2,
@@ -29,11 +29,11 @@ struct Dp_Control
    };
    
 /* ======= Rutinas ======== */
-/* Rutina para iniciar el m�dulo (su estructura de datos) */   
+/* Rutina para iniciar el módulo (su estructura de datos) */   
 char Dp_Inicie (Dp_Control *dp, Tm_Num n_periodo, Tm_Num n_to10, Tm_Num n_to2, Tm_Num n_to5);
                   
-/* Rutina para procesar el m�dulo (dentro del loop de polling) */				
-void Dp_Procese (Adc_Control *acp);
+/* Rutina para procesar el módulo (dentro del loop de polling) */				
+void Dp_Procese (Dp_Control *dp);
 
 /* ===== RUTINAS DE INTERFAZ ====== */
 //Pendiente
