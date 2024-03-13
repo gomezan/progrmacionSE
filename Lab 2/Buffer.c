@@ -10,6 +10,7 @@ void Bf_Inicie(Buffer_Control *buf, Bf_data *datos,  Bf_pointer total)
 {
     buf->datos = datos;
     buf->total = total;
+    buf->perc_25 = (buf->total) * 0.25;
     buf->cont = 0;
 
     for(;total;--total,++datos)
@@ -36,6 +37,54 @@ char Bf_Lleno(Buffer_Control *buf)
         return FALSE;
     }
     
+}
+
+/* Rutina para verificar si el buffer está vacío */
+char Bf_Vacio(Buffer_Control *buf)
+{
+    if(!(buf->active))
+        return -1;
+
+    if(buf->cont == buf->total)
+    {
+        return TRUE;
+    }
+    else
+    {
+        return FALSE;
+    }
+}
+
+/* Rutina para verificar si el buffer está vacío */
+char Bf_75_Lleno(Buffer_Control *buf)
+{
+    if(!(buf->active))
+        return -1;
+
+    if(buf->cont >= (buf->total - buf->perc_25))
+    {
+        return TRUE;
+    }
+    else
+    {
+        return FALSE;
+    }
+}
+
+/* Rutina para verificar si el buffer está vacío */
+char Bf_75_Vacio(Buffer_Control *buf)
+{
+    if(!(buf->active))
+        return -1;
+
+    if(buf->cont <= buf->perc_25)
+    {
+        return TRUE;
+    }
+    else
+    {
+        return FALSE;
+    }
 }
 
 /* Rutina para subir un dato al buffer */

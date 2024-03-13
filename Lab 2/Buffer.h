@@ -20,10 +20,11 @@ struct Buffer_Control
    Bf_data *datos;
    
    /* Control del tamaño del buffer */
-   Bf_pointer read,  // Posición en buffer de lectura
-              write, // Posición en buffer de escritura
-              cont,  // Valores guardados en un instante
-              total; // Total de valores a guardar
+   Bf_pointer read,    // Posición en buffer de lectura
+              write,   // Posición en buffer de escritura
+              cont,    // Valores guardados en un instante
+              perc_25, // 25 porciento del total 
+              total;   // Total de valores a guardar
    };
 
 
