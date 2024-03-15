@@ -6,6 +6,8 @@
 #include <Tiempo.h>
 #include <Buffer.h>
 
+
+//Estructura de control del display
 typedef struct Dp_Control Dp_Control;
 
 struct Dp_Control

@@ -37,13 +37,16 @@ char Tm_Inicie (Tm_Control *tcp,
 /* Rutina para procesar el módulo (dentro del loop de polling) */				
 void Tm_Procese (Tm_Control *tcp)
    {
+   
    Tm_Num n;
    Tm_Periodo *pp;
    Tm_Timeout *tp;
    
+   //Solo avanza cuando el HW así lo permite
    if ( !(tcp->atender(SI)) )
       return;
       
+   //Actualizar periodos
    for (n = tcp->nper, pp = tcp->pp; n; ++pp, --n)
       if (pp->banderas & TM_PER_F_ACTIVO)
          {
@@ -55,6 +58,7 @@ void Tm_Procese (Tm_Control *tcp)
             };
          };
 
+   // Actualizar timeouts
    for (n = tcp->nto, tp = tcp->tp; n; ++tp, --n)
       if (*tp)
          --(*tp);

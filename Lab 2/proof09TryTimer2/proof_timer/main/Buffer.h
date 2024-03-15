@@ -5,12 +5,13 @@
 
 #include "Varios.h"
 
+//Definicicón de variables del buffer
 typedef unsigned char Bf_data;
-
 typedef unsigned char Bf_pointer;
 
 typedef struct Buffer_Control Buffer_Control;
 
+//Estructura de control del buffer 
 struct Buffer_Control
    {
 

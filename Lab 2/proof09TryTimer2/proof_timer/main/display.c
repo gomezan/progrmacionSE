@@ -6,7 +6,7 @@ extern Tm_Control c_tiempo;
 extern Buffer_Control c_buff;
 
 //Variables de funcionamiento
-#define PERIODO_BASE    160
+#define PERIODO_BASE    160  //Hz
 #define NUM_MUERTO    -1
 #define TIEMPO_OFF    320       // TO de 2  segundos
 #define TIEMPO_EOF    1600     // TO de 10 segundos
@@ -21,14 +21,17 @@ char Dp_Inicie (Dp_Control *dp,
                    Tm_Num n_to5)
    {
 
-
-   dp->flag_eof=dp->flag_ca1 =dp->flag_25=dp->flag_off=0;   
+    //Inicializar variables
+   dp->flag_eof=dp->flag_ca1 =dp->flag_25=dp->flag_off=0;
+   // Inicializar el número a imprimir    
    dp->digit =NUM_MUERTO;
    
+   //Inicializar periodo
    dp->n_periodo = n_periodo;
    if ( !Tm_Inicie_periodo(&c_tiempo, n_periodo, PERIODO_BASE) )
       return NO;
       
+   //número de timeouts   
    dp->n_to10 = n_to10;
    dp->n_to5 = n_to5;
    dp->n_to2 = n_to2;
@@ -42,9 +45,10 @@ char Dp_Inicie (Dp_Control *dp,
 
    if(Bf_Vacio(buf)){
 
-        printf("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+      //Solo si el buffer esta vacio se revisa el esado de la bandera eof
       if(dp->flag_eof){
 
+        //La bendera flag_finish indica el fin de transmisión
          if(Tm_Hubo_timeout(&c_tiempo, dp->n_to10)){
             dp->flag_finish=1;
          }
@@ -52,6 +56,7 @@ char Dp_Inicie (Dp_Control *dp,
       return NO;
 
       }else{
+        //Si el buffer está vacío y no se ha subido la bandera, esta se sube e inicia el timeout
          dp->flag_eof=1;
          Tm_Inicie_timeout(&c_tiempo, dp->n_to10, TIEMPO_EOF);
           return NO;
@@ -68,6 +73,7 @@ char Dp_Inicie (Dp_Control *dp,
   
   if(dp->flag_off){
 
+    //Solo se baja la bandera si se ha llegado al timeout
       if(Tm_Hubo_timeout(&c_tiempo, dp->n_to2)){
          dp->flag_off=0;
       } else {
@@ -79,8 +85,11 @@ char Dp_Inicie (Dp_Control *dp,
   } 
 
 
+//Contiene la lógica para imprimir caracteres en el 7 segmentos
 char print_digit(char digit)
 {
+
+    //Contiene los 18 carácteres que el sistema soporta imprimir en el 7 segmentos
     static char lookup_table[18] = {
         /* xgfe dcba */
         0x3F, // x011 1111 - 0
@@ -102,6 +111,8 @@ char print_digit(char digit)
         0x00, // x000 0000 - off
         0x40  // x100 0000 - guión
     };
+
+    //Pines que controlan la salida del 7 segmentos
     static unsigned char pins[7] = 
     {
         GPIO_OUTPUT_IO_0,
@@ -113,104 +124,49 @@ char print_digit(char digit)
         GPIO_OUTPUT_IO_6
     };
 
-    printf("\n\n");
+    //Encender pines del caracter especifico
     for(int i = 6; i>=0; i--)
     {
+
+        //Determina el estado de los pines
         if((int)(lookup_table[(int)(digit)]) & (1 << i))
         {
+
+            //Apagar pines
             gpio_set_level(pins[i],0);
             printf("0");
         }
         else
         {
+            //Encender pines
             gpio_set_level(pins[i],1);
             printf("1");
         }
 
     }
-    printf("\n\nprinting = %d\n\n",(int)(lookup_table[(int)(digit)]));
 
     return TRUE;
-/*
-    if(lookup_table[digit] & 0x01) // bit 0 - a
-    {
-        gpio_set_level(GPIO_OUTPUT_IO_0, 0);
-    }
-    else
-    {
-        gpio_set_level(GPIO_OUTPUT_IO_0, 1);
-    }
-
-
-    if(lookup_table[digit] & 0x02) // bit 1 - b
-    {
-        gpio_set_level(GPIO_OUTPUT_IO_1, 0);
-    }
-    else
-    {
-        gpio_set_level(GPIO_OUTPUT_IO_1, 1);
-    }
-
-    if(lookup_table[digit] & 0x04) // bit 2 - c
-    {
-        gpio_set_level(GPIO_OUTPUT_IO_2, 0);
-    }
-    else
-    {
-        gpio_set_level(GPIO_OUTPUT_IO_2, 1);
-    }
-
-    if(lookup_table[digit] & 0x08) // bit 3 - d
-    {
-        gpio_set_level(GPIO_OUTPUT_IO_3, 0);
-    }
-    else
-    {
-        gpio_set_level(GPIO_OUTPUT_IO_3, 1);
-    }
-
-    if(lookup_table[digit] & 0x10) // bit 4 - e
-    {
-        gpio_set_level(GPIO_OUTPUT_IO_4, 0);
-    }
-    else
-    {
-        gpio_set_level(GPIO_OUTPUT_IO_4, 1);
-    }
-
-    if(lookup_table[digit] & 0x20) // bit 5 - f
-    {
-        gpio_set_level(GPIO_OUTPUT_IO_5, 0);
-    }
-    else
-    {
-        gpio_set_level(GPIO_OUTPUT_IO_5, 1);
-    }
-
-    if(lookup_table[digit] & 0x40) // bit 6 - g
-    {
-        gpio_set_level(GPIO_OUTPUT_IO_6, 0);
-    }
-    else
-    {
-        gpio_set_level(GPIO_OUTPUT_IO_6, 1);
-    } */
 }
 
+
+//Se encarga de controlar la lógica que regula la impresión del digito de salida con base en las banderas
 char send_digits_display(char digit, char flag_25, char flag_CA1, char flag_off, char flag_TO10)
 {
+    //Variable auxliar 
     static int cont = 0;
 
-    printf("digito: %d",digit);
-
+    //WTF
     if(digit == 0x23 || digit == 0x24 || digit == 0x25 || digit == 0x26)
         return FALSE;
 
+    //Complemento a 1 
     if(flag_CA1 == 1)
         digit = ~digit;
 
+    //WTF
     digit &= 0x0F;
 
+    //Baja intensidad
     if(flag_25 == 1)
     {
         cont++;
@@ -229,12 +185,14 @@ char send_digits_display(char digit, char flag_25, char flag_CA1, char flag_off,
         cont = 0;
     }
 
+    //Apagado de 2 segundos
     if(flag_off)
     {
         // Apagado
         digit = 0x10;
     }
 
+    //Fin de envío
     if(flag_TO10 == 1)
     {
         // guión
@@ -248,11 +206,14 @@ char send_digits_display(char digit, char flag_25, char flag_CA1, char flag_off,
 /* Rutina para procesar el módulo (dentro del loop de polling) */				
 void Dp_Procese (Dp_Control *dp){
 
+   //Valor recibido directamente por el fuffer
    Bf_data raw_digit;
 
+    //Variables auxiliares para control de bucle
    char on;
    char active;
 
+  //Esta variable permite verificar si es posible continuar o si esta apagado por 2 segundos
    on=Dp_logicaApagado(dp);
 
    if(on){
@@ -271,10 +232,8 @@ void Dp_Procese (Dp_Control *dp){
 
          //Leer caracter del buffer
          Bf_Bajar_Dato(&c_buff, &raw_digit);
-         printf("baje %c",raw_digit);
 
          //Bajar bandera eof si esta encendida
-
          if(dp->flag_eof){
             dp->flag_eof=0;
             dp->flag_finish = 0;
@@ -282,18 +241,20 @@ void Dp_Procese (Dp_Control *dp){
          }
 
          //Identificar el caracter del buffer
-
+         //Caracteres de complemento a 1 
          if(raw_digit=='&'){
          dp->flag_ca1=1;
  
          } else if(raw_digit=='$'){
          dp->flag_ca1=0;
 
+        //Activa el apagado inmediato
          }  else if(raw_digit=='%'){
          Tm_Inicie_timeout(&c_tiempo, dp->n_to2, TIEMPO_OFF);
          dp->flag_off = 1;
          dp->digit=NUM_MUERTO;
    
+        //Reinicia la baja intensidad
          }  else if (raw_digit=='#'){
 
             if(dp->flag_25){
@@ -316,11 +277,11 @@ void Dp_Procese (Dp_Control *dp){
 
    }
 
+    //WTF
     Bf_data var;
     Bf_Libre(&c_buff,&var);
 
    //Se imprime cualquier digito dentro de la variable Digit
-   printf("\n %d %d banderas: %d %d digito: %d",var,Bf_Vacio(&c_buff),dp->flag_eof,dp->flag_finish,dp->digit);
    send_digits_display(dp->digit,dp->flag_25,dp->flag_ca1,dp->flag_off,dp->flag_finish);
 
    };
