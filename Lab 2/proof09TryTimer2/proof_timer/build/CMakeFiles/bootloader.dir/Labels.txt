@@ -1,0 +1,13 @@
+# Target labels
+ bootloader
+# Source files and their labels
+C:/Software/Proyecto2/proof09TryTimer2/proof_timer/build/CMakeFiles/bootloader
+C:/Software/Proyecto2/proof09TryTimer2/proof_timer/build/CMakeFiles/bootloader.rule
+C:/Software/Proyecto2/proof09TryTimer2/proof_timer/build/CMakeFiles/bootloader-complete.rule
+C:/Software/Proyecto2/proof09TryTimer2/proof_timer/build/bootloader-prefix/src/bootloader-stamp/bootloader-build.rule
+C:/Software/Proyecto2/proof09TryTimer2/proof_timer/build/bootloader-prefix/src/bootloader-stamp/bootloader-configure.rule
+C:/Software/Proyecto2/proof09TryTimer2/proof_timer/build/bootloader-prefix/src/bootloader-stamp/bootloader-download.rule
+C:/Software/Proyecto2/proof09TryTimer2/proof_timer/build/bootloader-prefix/src/bootloader-stamp/bootloader-install.rule
+C:/Software/Proyecto2/proof09TryTimer2/proof_timer/build/bootloader-prefix/src/bootloader-stamp/bootloader-mkdir.rule
+C:/Software/Proyecto2/proof09TryTimer2/proof_timer/build/bootloader-prefix/src/bootloader-stamp/bootloader-patch.rule
+C:/Software/Proyecto2/proof09TryTimer2/proof_timer/build/bootloader-prefix/src/bootloader-stamp/bootloader-update.rule
