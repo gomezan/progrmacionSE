@@ -47,6 +47,8 @@ char print_digit(char digit)
         }
 
     }
+
+    return TRUE;
 /*
     if(lookup_table[digit] & 0x01) // bit 0 - a
     {
