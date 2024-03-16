@@ -3,6 +3,8 @@
 
 #define VARIOS_H
 
+#include <stdio.h>
+
 /* Valores booleanos */
 #define SI	1
 #define NO	0

@@ -108,12 +108,12 @@ char Bf_Subir_Dato(Buffer_Control *buf, Bf_data write)
         if(buf->write == buf->read)
             buf->full = 1;
 
-    printf("subir dato: %d",buf->cont);
+    //printf("subir dato: %d",buf->cont);
         return TRUE;
     }
     else
     {
-    printf("subir dato: %d",buf->cont);
+    //printf("subir dato: %d",buf->cont);
         return FALSE;
     }
 }
@@ -142,11 +142,11 @@ char Bf_Bajar_Dato(Buffer_Control *buf, Bf_data *read)
         --(buf->cont);
         buf->full = 0;
 
-    printf("bajar dato: %d",buf->cont);
+    //printf("bajar dato: %d",buf->cont);
         return TRUE;
     }
 
-    printf("bajar dato: %d",buf->cont);
+    //printf("bajar dato: %d",buf->cont);
     return FALSE;
 }
 

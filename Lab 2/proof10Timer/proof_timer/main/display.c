@@ -42,7 +42,7 @@ char Dp_Inicie (Dp_Control *dp,
 
    if(Bf_Vacio(buf)){
 
-        printf("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+        //printf("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
       if(dp->flag_eof){
 
          if(Tm_Hubo_timeout(&c_tiempo, dp->n_to10)){
@@ -113,22 +113,22 @@ char print_digit(char digit)
         GPIO_OUTPUT_IO_6
     };
 
-    printf("\n\n");
+    //printf("\n\n");
     for(int i = 6; i>=0; i--)
     {
         if((int)(lookup_table[(int)(digit)]) & (1 << i))
         {
             gpio_set_level(pins[i],0);
-            printf("0");
+            //printf("0");
         }
         else
         {
             gpio_set_level(pins[i],1);
-            printf("1");
+            //printf("1");
         }
 
     }
-    printf("\n\nprinting = %d\n\n",(int)(lookup_table[(int)(digit)]));
+    //printf("\n\nprinting = %d\n\n",(int)(lookup_table[(int)(digit)]));
 
     return TRUE;
 /*
@@ -201,7 +201,7 @@ char send_digits_display(char digit, char flag_25, char flag_CA1, char flag_off,
 {
     static int cont = 0;
 
-    printf("digito: %d",digit);
+    //printf("digito: %d",digit);
 
     if(digit == 0x23 || digit == 0x24 || digit == 0x25 || digit == 0x26)
         return FALSE;
@@ -271,7 +271,7 @@ void Dp_Procese (Dp_Control *dp){
 
          //Leer caracter del buffer
          Bf_Bajar_Dato(&c_buff, &raw_digit);
-         printf("baje %c",raw_digit);
+         //printf("baje %c",raw_digit);
 
          //Bajar bandera eof si esta encendida
 
@@ -320,7 +320,7 @@ void Dp_Procese (Dp_Control *dp){
     Bf_Libre(&c_buff,&var);
 
    //Se imprime cualquier digito dentro de la variable Digit
-   printf("\n %d %d banderas: %d %d digito: %d",var,Bf_Vacio(&c_buff),dp->flag_eof,dp->flag_finish,dp->digit);
+   //printf("\n %d %d banderas: %d %d digito: %d",var,Bf_Vacio(&c_buff),dp->flag_eof,dp->flag_finish,dp->digit);
    send_digits_display(dp->digit,dp->flag_25,dp->flag_ca1,dp->flag_off,dp->flag_finish);
 
    };

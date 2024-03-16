@@ -40,10 +40,12 @@ void Tm_Procese (Tm_Control *tcp)
    Tm_Num n;
    Tm_Periodo *pp;
    Tm_Timeout *tp;
+
+   //printf("Entra Timer Procese\n");
    
    if ( !(tcp->atender(SI)) )
       return;
-      
+
    for (n = tcp->nper, pp = tcp->pp; n; ++pp, --n)
       if (pp->banderas & TM_PER_F_ACTIVO)
          {
@@ -92,6 +94,8 @@ void Tm_Termine_periodo (Tm_Control *tcp, Tm_Num num_periodo)
 char Tm_Hubo_periodo (Tm_Control *tcp, Tm_Num num_periodo)
    {
    Tm_Periodo *pp = tcp->pp + num_periodo;
+
+   //printf("Periodo %d\n",pp->banderas & TM_PER_F_FC);
    
    if (num_periodo >= tcp->nper)
       return NO;
