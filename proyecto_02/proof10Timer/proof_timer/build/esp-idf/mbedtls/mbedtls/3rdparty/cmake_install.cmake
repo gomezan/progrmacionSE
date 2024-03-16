@@ -39,8 +39,8 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("C:/Software/Proyecto2/proof09TryTimer2/proof_timer/build/esp-idf/mbedtls/mbedtls/3rdparty/everest/cmake_install.cmake")
-  include("C:/Software/Proyecto2/proof09TryTimer2/proof_timer/build/esp-idf/mbedtls/mbedtls/3rdparty/p256-m/cmake_install.cmake")
+  include("C:/Users/david/OneDrive/Documentos/GitHub/progrmacionSE/proyecto_02/proof10Timer/proof_timer/build/esp-idf/mbedtls/mbedtls/3rdparty/everest/cmake_install.cmake")
+  include("C:/Users/david/OneDrive/Documentos/GitHub/progrmacionSE/proyecto_02/proof10Timer/proof_timer/build/esp-idf/mbedtls/mbedtls/3rdparty/p256-m/cmake_install.cmake")
 
 endif()
 

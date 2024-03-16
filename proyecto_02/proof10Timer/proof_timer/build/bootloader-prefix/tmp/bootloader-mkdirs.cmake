@@ -5,18 +5,18 @@ cmake_minimum_required(VERSION 3.5)
 
 file(MAKE_DIRECTORY
   "C:/Users/david/esp/v5.2/esp-idf/components/bootloader/subproject"
-  "C:/Software/Proyecto2/proof09TryTimer2/proof_timer/build/bootloader"
-  "C:/Software/Proyecto2/proof09TryTimer2/proof_timer/build/bootloader-prefix"
-  "C:/Software/Proyecto2/proof09TryTimer2/proof_timer/build/bootloader-prefix/tmp"
-  "C:/Software/Proyecto2/proof09TryTimer2/proof_timer/build/bootloader-prefix/src/bootloader-stamp"
-  "C:/Software/Proyecto2/proof09TryTimer2/proof_timer/build/bootloader-prefix/src"
-  "C:/Software/Proyecto2/proof09TryTimer2/proof_timer/build/bootloader-prefix/src/bootloader-stamp"
+  "C:/Users/david/OneDrive/Documentos/GitHub/progrmacionSE/proyecto_02/proof10Timer/proof_timer/build/bootloader"
+  "C:/Users/david/OneDrive/Documentos/GitHub/progrmacionSE/proyecto_02/proof10Timer/proof_timer/build/bootloader-prefix"
+  "C:/Users/david/OneDrive/Documentos/GitHub/progrmacionSE/proyecto_02/proof10Timer/proof_timer/build/bootloader-prefix/tmp"
+  "C:/Users/david/OneDrive/Documentos/GitHub/progrmacionSE/proyecto_02/proof10Timer/proof_timer/build/bootloader-prefix/src/bootloader-stamp"
+  "C:/Users/david/OneDrive/Documentos/GitHub/progrmacionSE/proyecto_02/proof10Timer/proof_timer/build/bootloader-prefix/src"
+  "C:/Users/david/OneDrive/Documentos/GitHub/progrmacionSE/proyecto_02/proof10Timer/proof_timer/build/bootloader-prefix/src/bootloader-stamp"
 )
 
 set(configSubDirs )
 foreach(subDir IN LISTS configSubDirs)
-    file(MAKE_DIRECTORY "C:/Software/Proyecto2/proof09TryTimer2/proof_timer/build/bootloader-prefix/src/bootloader-stamp/${subDir}")
+    file(MAKE_DIRECTORY "C:/Users/david/OneDrive/Documentos/GitHub/progrmacionSE/proyecto_02/proof10Timer/proof_timer/build/bootloader-prefix/src/bootloader-stamp/${subDir}")
 endforeach()
 if(cfgdir)
-  file(MAKE_DIRECTORY "C:/Software/Proyecto2/proof09TryTimer2/proof_timer/build/bootloader-prefix/src/bootloader-stamp${cfgdir}") # cfgdir has leading slash
+  file(MAKE_DIRECTORY "C:/Users/david/OneDrive/Documentos/GitHub/progrmacionSE/proyecto_02/proof10Timer/proof_timer/build/bootloader-prefix/src/bootloader-stamp${cfgdir}") # cfgdir has leading slash
 endif()

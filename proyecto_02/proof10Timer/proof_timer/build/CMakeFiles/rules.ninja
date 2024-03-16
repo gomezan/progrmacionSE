@@ -1419,7 +1419,7 @@ rule C_STATIC_LIBRARY_LINKER____idf_main_
 # Rule for re-running cmake.
 
 rule RERUN_CMAKE
-  command = C:\Users\david\.espressif\tools\cmake\3.24.0\bin\cmake.exe --regenerate-during-build -SC:\Software\Proyecto2\proof09TryTimer2\proof_timer -BC:\Software\Proyecto2\proof09TryTimer2\proof_timer\build
+  command = C:\Users\david\.espressif\tools\cmake\3.24.0\bin\cmake.exe --regenerate-during-build -SC:\Users\david\OneDrive\Documentos\GitHub\progrmacionSE\proyecto_02\proof10Timer\proof_timer -BC:\Users\david\OneDrive\Documentos\GitHub\progrmacionSE\proyecto_02\proof10Timer\proof_timer\build
   description = Re-running CMake...
   generator = 1
 

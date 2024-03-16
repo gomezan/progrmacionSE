@@ -3,4 +3,4 @@ source "C:/Users/david/esp/v5.2/esp-idf/components/esp_app_format/Kconfig.projbu
 source "C:/Users/david/esp/v5.2/esp-idf/components/esp_rom/Kconfig.projbuild"
 source "C:/Users/david/esp/v5.2/esp-idf/components/esptool_py/Kconfig.projbuild"
 source "C:/Users/david/esp/v5.2/esp-idf/components/partition_table/Kconfig.projbuild"
-source "C:/Software/Proyecto2/proof09TryTimer2/proof_timer/main/Kconfig.projbuild"
+source "C:/Users/david/OneDrive/Documentos/GitHub/progrmacionSE/proyecto_02/proof10Timer/proof_timer/main/Kconfig.projbuild"

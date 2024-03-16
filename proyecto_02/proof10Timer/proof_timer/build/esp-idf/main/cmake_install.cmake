@@ -1,4 +1,4 @@
-# Install script for directory: C:/Software/Proyecto2/proof09TryTimer2/proof_timer/main
+# Install script for directory: C:/Users/david/OneDrive/Documentos/GitHub/progrmacionSE/proyecto_02/proof10Timer/proof_timer/main
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

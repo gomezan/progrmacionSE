@@ -13,9 +13,18 @@
 #include "Buffer.h"
 #include "Tiempo.h"
 #include "display.h"
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
 #include "hal/timer_ll.h"
 #include "hal/mwdt_ll.h"
+#include "driver/uart.h"
 #include "esp_task_wdt.h"
+#include "esp_log.h"
+#include "string.h"
+
+#define XOFF 19
+#define XON 17
+#define SIZE_BUFFER 64
 
 /**
  * Brief:
@@ -73,8 +82,8 @@ char Atender_timer (char atienda)
             TIMERG0.hw_timer[0].load.val=0;
             TIMERG0.hw_timer[0].config.tx_en=1;
             //printf("entra timer\n");
-            gpio_set_level(GPIO_OUTPUT_IO_0, cnt%2);
-            cnt++;
+            //gpio_set_level(GPIO_OUTPUT_IO_0, cnt%2);
+            //cnt++;
         }
         return SI;
     }
@@ -143,11 +152,11 @@ void app_main(void)
     Tm_Periodo periodos[3];
     Tm_Timeout timeouts[3];
 
-    Bf_data data[20] = {};
+    Bf_data data[SIZE_BUFFER] = {};
 
     Bf_data temp = 20;
 
-    Bf_Inicie(&c_buff,data,20);
+    Bf_Inicie(&c_buff,data,SIZE_BUFFER);
     Tm_Inicie(&c_tiempo,periodos,3,timeouts,3,Atender_timer);
 
     Dp_Inicie (&c_display,0,0,1,2);
@@ -157,6 +166,36 @@ void app_main(void)
     int cnt = 0;
     uint64_t val_timer = 0;
     esp_task_wdt_deinit();
+
+    const uart_port_t uart_num = UART_NUM_2;
+    uart_config_t uart_config = {
+        .baud_rate = 2400,
+        .data_bits = UART_DATA_8_BITS,
+        .parity = UART_PARITY_DISABLE,
+        .stop_bits = UART_STOP_BITS_1,
+        .flow_ctrl = UART_HW_FLOWCTRL_DISABLE,
+        .rx_flow_ctrl_thresh = UART_SCLK_DEFAULT,
+    };
+    // Configure UART parameters
+    ESP_ERROR_CHECK(uart_param_config(uart_num, &uart_config));
+
+    // Set UART pins(TX: IO4, RX: IO5, RTS: IO18, CTS: IO19)
+    ESP_ERROR_CHECK(uart_set_pin(UART_NUM_2, 17, 16, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE));
+
+    // Setup UART buffered IO with event queue
+    const int uart_buffer_size = (1024 * 2);
+    QueueHandle_t uart_queue;
+    // Install UART driver using an event queue here
+    ESP_ERROR_CHECK(uart_driver_install(UART_NUM_2, uart_buffer_size, \
+                                            uart_buffer_size, 10, &uart_queue, 0));
+
+    // Write data to UART.
+    char* test_str = XON;
+    
+    const int len = 1;
+    uint8_t data_uart[len];
+    bool leer = true;
+
     while (1) {
         
         /*
@@ -178,15 +217,30 @@ void app_main(void)
             Dp_Procese (&c_display);
             Tm_Baje_periodo (&c_tiempo,0);
         }
-
-        if(!(Bf_75_Lleno(&c_buff)) && cnt < sizeof(lookup_proof))
+        if(Bf_75_Lleno(&c_buff)){
+            leer = false;
+            test_str = XOFF;
+            uart_write_bytes(uart_num, (const char*) test_str, len);
+        }
+        if (Bf_75_Vacio(&c_buff))
+        {
+            leer = true;
+            test_str = XON;
+            uart_write_bytes(uart_num, (const char*) test_str, len);
+        }
+        if (leer)
+        {
+           uart_read_bytes(uart_num, data_uart, 1, 10);
+           Bf_Subir_Dato(&c_buff,data_uart[0]);
+        }
+        /*if(!(Bf_75_Lleno(&c_buff)) && cnt < sizeof(lookup_proof))
         {
             Bf_Subir_Dato(&c_buff,lookup_proof[cnt]);
             //printf("subi %c",lookup_proof[cnt]);
             cnt++;
             //if(cnt >= sizeof(lookup_proof))
             //    cnt = 0;
-        }
+        }*/
         //print_digit(1);
     }
 }

@@ -1,4 +1,4 @@
-/* * Data converted from C:/Software/Proyecto2/proof09TryTimer2/proof_timer/build/esp-idf/mbedtls/x509_crt_bundle
+/* * Data converted from C:/Users/david/OneDrive/Documentos/GitHub/progrmacionSE/proyecto_02/proof10Timer/proof_timer/build/esp-idf/mbedtls/x509_crt_bundle
  */
 .data
 .section .rodata.embedded
