@@ -19,6 +19,8 @@
 
 typedef struct Dp_Control Dp_Control;
 
+
+//Estructura de control de display
 struct Dp_Control
 {                  
    /* Banderas */
@@ -47,8 +49,10 @@ char Dp_Inicie (Dp_Control *dp, Tm_Num n_periodo, Tm_Num n_to10, Tm_Num n_to2, T
 void Dp_Procese (Dp_Control *dp);
 
 /* ===== RUTINAS DE INTERFAZ ====== */
+//Contiene la lógica para imprimir caracteres en el 7 segmentos
 char print_digit(char digit);
 
+//Se encarga de controlar la lógica que regula la impresión del digito de salida con base en las banderas
 char send_digits_display(char digit, char flag_25, char flag_CA1, char flag_off, char flag_TO10);
 
 /* == FIN DE RUTINAS DE INTERFAZ == */

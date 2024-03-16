@@ -5,6 +5,7 @@
 #include <Buffer.h>
 #include "Varios.h"
 
+//
 extern Tm_Control c_tiempo;
 extern Buffer_Control buff;
 
