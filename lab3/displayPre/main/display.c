@@ -152,7 +152,11 @@ char send_digits_display(char digit, char flag_25, char flag_CA1, char flag_off,
 /* Rutina para procesar el módulo (dentro del loop de polling) */				
 void Dp_Procese (Dp_Control *dp){
 
-printf("hola mundo");
+    print_digit(8);
+    gpio_set_level(CONFIG_GPIO_DIGIT_0,1);
+    gpio_set_level(CONFIG_GPIO_DIGIT_1,0);
+    gpio_set_level(CONFIG_GPIO_DIGIT_2,1);
+    
 
 }
 

@@ -1,13 +1,13 @@
 # ninja log v5
-124	79351	7347220332733249	build.ninja	4958fa1947ea9b54
+124	79351	7347433898689588	build.ninja	4958fa1947ea9b54
 115	343	7346459820297945	project_elf_src_esp32.c	193e45dfddd1c128
 102559	103372	7346460849773359	esp-idf/soc/CMakeFiles/__idf_soc.dir/esp32/i2c_periph.c.obj	63ca99b1e370766e
-29974	31861	7346460132430349	esp-idf/mbedtls/mbedtls/library/CMakeFiles/mbedcrypto.dir/poly1305.c.obj	844f1652eb5a669e
-386569	391487	7346463721182179	esp-idf/esp_lcd/CMakeFiles/__idf_esp_lcd.dir/src/esp_lcd_panel_io_spi.c.obj	21da55041f510464
 20308	23788	7346460046144327	esp-idf/mbedtls/mbedtls/library/CMakeFiles/mbedcrypto.dir/hmac_drbg.c.obj	2e47335a19bcb441
+386569	391487	7346463721182179	esp-idf/esp_lcd/CMakeFiles/__idf_esp_lcd.dir/src/esp_lcd_panel_io_spi.c.obj	21da55041f510464
 115839	118050	7346460993189287	esp-idf/esp_hw_support/CMakeFiles/__idf_esp_hw_support.dir/port/esp32/io_mux.c.obj	c2459ebed87f2c68
 258446	261277	7346462427817882	esp-idf/wpa_supplicant/CMakeFiles/__idf_wpa_supplicant.dir/src/wps/wps_common.c.obj	2f225a1ee07ef4c1
 120	1871	7346459821024917	partition_table/partition-table.bin	bc1b96ff334e308e
+29974	31861	7346460132430349	esp-idf/mbedtls/mbedtls/library/CMakeFiles/mbedcrypto.dir/poly1305.c.obj	844f1652eb5a669e
 128806	132168	7346461136435789	esp-idf/esp_hw_support/CMakeFiles/__idf_esp_hw_support.dir/port/esp32/sar_periph_ctrl.c.obj	b4fc49d3ed6b0c04
 125	355	7346459820871424	esp-idf/esp_system/ld/memory.ld	9a62b62e21dbbe86
 96063	97176	7346460787176186	esp-idf/hal/CMakeFiles/__idf_hal.dir/esp32/touch_sensor_hal.c.obj	be84b2c5e6a3f915
@@ -936,3 +936,5 @@
 2406	14190	7346809832690190	esp-idf/esp_system/ld/sections.ld	1e71e49cbdf3da13
 16052	16437	7346809855544301	C:/Users/aulasingenieria/Documents/GitHub/progrmacionSE/lab3/displayPre/build/.bin_timestamp	d508f849d3a1849f
 148	929	7346807584979063	esp-idf/main/CMakeFiles/__idf_main.dir/display.c.obj	c8e49bf59c9ba42b
+10	28	0	clean	1dc20eeb2906f3fb
+9	21	0	clean	1dc20eeb2906f3fb
