@@ -1,0 +1,2 @@
+C:/Users/aulasingenieria/Documents/GitHub/progrmacionSE/lab3/displayPre/build/CMakeFiles/edit_cache.dir
+C:/Users/aulasingenieria/Documents/GitHub/progrmacionSE/lab3/displayPre/build/CMakeFiles/rebuild_cache.dir
