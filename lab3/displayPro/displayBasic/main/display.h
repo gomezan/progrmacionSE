@@ -77,15 +77,15 @@ char print_digit(char digit);
 char send_digits_display(char digit, char flag_falla, char flag_finish);
 
 //Actualza el digito presenta en las unidades
-char update_u(char digit);
+char update_u(Dp_Control *dp, char digit);
 //Actualza el digito presenta en las decenas
-char update_d(char digit);
+char update_d(Dp_Control *dp,char digit);
 //Actualza el digito presenta en las centenas
-char update_c(char digit);
+char update_c(Dp_Control *dp, char digit);
 //Actualza el flag de finalización de envío
-char update_flag_finish(char status_flag);
+char update_flag_finish(Dp_Control *dp, char status_flag);
 //Actualza el flag de fallas y titilación
-char update_flag_fallas(char status_flag);
+char update_flag_fallas(Dp_Control *dp, char status_flag);
 
 /* == FIN DE RUTINAS DE INTERFAZ == */
 

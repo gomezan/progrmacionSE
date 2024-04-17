@@ -2,6 +2,7 @@
 
 #include "display.h"
 
+
 extern Tm_Control c_tiempo;
 
 #define PERIODO_BASE    160  //Hz
@@ -27,8 +28,7 @@ char Dp_Inicie (Dp_Control *dp, Tm_Num n_periodo)
    //Inicializar periodo
    dp->n_periodo = n_periodo;
    if ( !Tm_Inicie_periodo(&c_tiempo, n_periodo, PERIODO_BASE) )
-      return NO;
-      
+      return NO;      
 
    return SI;
    };
@@ -203,5 +203,43 @@ void Dp_Procese (Dp_Control *dp){
 /* ===== RUTINAS DE INTERFAZ ====== */
 /* Rutina para activar un canal. Indica si se pudo activar. */
 
+//Actualza el digito presenta en las unidades
+char update_u(Dp_Control *dp,char digit){
 
+    if(digit>9)
+        return NO;
+
+    dp->digitU=digit;
+    return SI;
+}
+//Actualza el digito presenta en las decenas
+char update_d(Dp_Control *dp,char digit){
+
+    if(digit>9)
+        return NO;
+
+    dp->digitD=digit;
+    return SI;
+}
+//Actualza el digito presenta en las centenas
+char update_c(Dp_Control *dp, char digit){
+
+    if(digit>9)
+        return NO;
+
+    dp->digitC=digit;
+    return SI;
+}
+//Actualza el flag de finalización de envío
+char update_flag_finish(Dp_Control *dp, char status_flag){
+
+    dp->flag_Finish=status_flag;
+    return SI;
+}
+//Actualza el flag de fallas y titilación
+char update_flag_fallas(Dp_Control *dp, char status_flag){
+
+    dp->flag_Falla=status_flag;
+    return SI;
+}
 /* == FIN DE RUTINAS DE INTERFAZ == */
