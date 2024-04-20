@@ -5,6 +5,7 @@
 
 #include "Tiempo.h"
 #include "Varios.h"
+#include "Buffer.h"
 
 typedef struct P_Control P_Control;
 //Estructura de control de display

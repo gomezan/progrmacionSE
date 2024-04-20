@@ -2,48 +2,44 @@
 
 #include "display.h"
 
-
 extern Tm_Control c_tiempo;
 
-#define PERIODO_BASE    160  //Hz
-#define NUM_MUERTO    0x10   /// Apagado
-#define PERIODO_T1    3       // Divisor a 1 Hz
-#define PERIODO_T2    6     // Divisor a 2 Hz
+#define PERIODO_BASE 160 // Hz
+#define NUM_MUERTO 0x10  /// Apagado
+#define PERIODO_T1 3     // Divisor a 1 Hz
+#define PERIODO_T2 6     // Divisor a 2 Hz
 
+/* Rutina para iniciar el módulo (su estructura de datos) */
+char Dp_Inicie(Dp_Control *dp, Tm_Num n_periodo)
+{
 
-/* Rutina para iniciar el módulo (su estructura de datos) */   
-char Dp_Inicie (Dp_Control *dp, Tm_Num n_periodo)
-   {
+    // Inicializar variables
+    dp->flag_Finish = dp->flag_Falla = 0;
+    // Inicializar los números a imprimir
+    // dp->digitU =NUM_MUERTO;
+    // dp->digitD =NUM_MUERTO;
+    // dp->digitC =NUM_MUERTO;
 
-    //Inicializar variables
-   dp->flag_Finish=dp->flag_Falla=0;
-   // Inicializar los números a imprimir    
-   //dp->digitU =NUM_MUERTO;
-   //dp->digitD =NUM_MUERTO;
-   //dp->digitC =NUM_MUERTO;
+    dp->digitU = 1;
+    dp->digitD = 2;
+    dp->digitC = 3;
 
-   dp->digitU =1;
-   dp->digitD =2;
-   dp->digitC =3;
+    // Inica la posición nula
+    dp->mul = 0x00;
 
-   // Inica la posición nula
-   dp->mul =0x00;
-   
-   //Inicializar periodo
-   dp->n_periodo = n_periodo;
-   if ( !Tm_Inicie_periodo(&c_tiempo, n_periodo, PERIODO_BASE) )
-      return NO;      
+    // Inicializar periodo
+    dp->n_periodo = n_periodo;
+    if (!Tm_Inicie_periodo(&c_tiempo, n_periodo, PERIODO_BASE))
+        return NO;
 
-   return SI;
-   };
+    return SI;
+};
 
-
-
-//Contiene la lógica para imprimir caracteres en el 7 segmentos
+// Contiene la lógica para imprimir caracteres en el 7 segmentos
 char print_digit(char digit)
 {
 
-    //Contiene los 18 carácteres que el sistema soporta imprimir en el 7 segmentos
+    // Contiene los 18 carácteres que el sistema soporta imprimir en el 7 segmentos
     static char lookup_table[18] = {
         /* xgfe dcba */
         0x3F, // x011 1111 - 0
@@ -66,52 +62,41 @@ char print_digit(char digit)
         0x40  // x100 0000 - guión
     };
 
-    
-
-    //Encender pines del caracter especifico
-    for(int i = 6; i>=0; i--)
+    // Encender pines del caracter especifico
+    for (int i = 6; i >= 0; i--)
     {
 
-        //Determina el estado de los pines
-        
-        if((int)(lookup_table[(int)(digit)]) & (1 << i))
+        // Determina el estado de los pines
+
+        if ((int)(lookup_table[(int)(digit)]) & (1 << i))
         {
 
-            //Apagar pines
-            gpio_set_level(pins[i],1);
+            // Apagar pines
+            gpio_set_level(pins[i], 1);
             printf("0");
         }
         else
         {
-            //Encender pines
-            gpio_set_level(pins[i],0);
+            // Encender pines
+            gpio_set_level(pins[i], 0);
             printf("1");
         }
-
     }
 
     return TRUE;
 }
 
-
-//Se encarga de controlar la lógica que regula la impresión del digito de salida con base en las banderas
+// Se encarga de controlar la lógica que regula la impresión del digito de salida con base en las banderas
 char send_digits_display(char digit, char flag_falla, char flag_finish)
 {
-    //Variable auxliar 
+    // Variable auxliar
     static int cont = 0;
 
-    //WTF
-    if(digit == 0x23 || digit == 0x24 || digit == 0x25 || digit == 0x26)
-        return FALSE;
-
-
-    digit &= 0x0F;
-
-    //Baja intensidad
-    if(flag_falla == 1)
+    // Baja intensidad
+    if (flag_falla == 1)
     {
         cont++;
-        if(cont > PERIODO_T1)
+        if (cont > PERIODO_T1)
         {
             cont = 0;
         }
@@ -125,10 +110,10 @@ char send_digits_display(char digit, char flag_falla, char flag_finish)
         cont = 0;
     }
 
-        if(flag_falla == 2)
+    if (flag_falla == 2)
     {
         cont++;
-        if(cont > PERIODO_T2)
+        if (cont > PERIODO_T2)
         {
             cont = 0;
         }
@@ -142,108 +127,110 @@ char send_digits_display(char digit, char flag_falla, char flag_finish)
         cont = 0;
     }
 
-
-    //Fin de envío
-    if(flag_finish == 1)
+    // Fin de envío
+    if (flag_finish == 1)
     {
         // guión
         digit = 0x11;
     }
-    
-    return print_digit(digit);
 
+    return print_digit(digit);
 }
 
-/* Rutina para procesar el módulo (dentro del loop de polling) */				
-void Dp_Procese (Dp_Control *dp){
+/* Rutina para procesar el módulo (dentro del loop de polling) */
+void Dp_Procese(Dp_Control *dp)
+{
 
     char digit;
 
-    //Incrmento la posición del multiplexor
-    ++dp->mul;
-    //Revisar posible desborde
-    if(dp->mul>3){
-        dp->mul=1;
+    // Incrmento la posición del multiplexor
+    ++(dp->mul);
+    // Revisar posible desborde
+    if (dp->mul > 3)
+    {
+        dp->mul = 1;
     }
-    switch(dp->mul){
-
-        case(1):
-            digit=dp->digitU;
-            gpio_set_level(CONFIG_GPIO_DIGIT_0,0);
-            gpio_set_level(CONFIG_GPIO_DIGIT_1,1);
-            gpio_set_level(CONFIG_GPIO_DIGIT_2,1);
+    
+    switch (dp->mul)
+    {
+        case (1):
+            digit = dp->digitU;
+            gpio_set_level(CONFIG_GPIO_DIGIT_0, 0);
+            gpio_set_level(CONFIG_GPIO_DIGIT_1, 1);
+            gpio_set_level(CONFIG_GPIO_DIGIT_2, 1);
         break;
 
-        case(2):
-            digit=dp->digitD;
-            gpio_set_level(CONFIG_GPIO_DIGIT_0,1);
-            gpio_set_level(CONFIG_GPIO_DIGIT_1,0);
-            gpio_set_level(CONFIG_GPIO_DIGIT_2,1);
+        case (2):
+            digit = dp->digitD;
+            gpio_set_level(CONFIG_GPIO_DIGIT_0, 1);
+            gpio_set_level(CONFIG_GPIO_DIGIT_1, 0);
+            gpio_set_level(CONFIG_GPIO_DIGIT_2, 1);
         break;
 
-        case(3):
-            digit=dp->digitC;
-            gpio_set_level(CONFIG_GPIO_DIGIT_0,1);
-            gpio_set_level(CONFIG_GPIO_DIGIT_1,1);
-            gpio_set_level(CONFIG_GPIO_DIGIT_2,0);
+        case (3):
+            digit = dp->digitC;
+            gpio_set_level(CONFIG_GPIO_DIGIT_0, 1);
+            gpio_set_level(CONFIG_GPIO_DIGIT_1, 1);
+            gpio_set_level(CONFIG_GPIO_DIGIT_2, 0);
         break;
 
         default:
-
-            digit=NUM_MUERTO;
-            gpio_set_level(CONFIG_GPIO_DIGIT_0,1);
-            gpio_set_level(CONFIG_GPIO_DIGIT_1,1);
-            gpio_set_level(CONFIG_GPIO_DIGIT_2,0);
+            digit = NUM_MUERTO;
+            gpio_set_level(CONFIG_GPIO_DIGIT_0, 1);
+            gpio_set_level(CONFIG_GPIO_DIGIT_1, 1);
+            gpio_set_level(CONFIG_GPIO_DIGIT_2, 0);
         break;
-
-
     }
 
     //
     send_digits_display(digit, dp->flag_Falla, dp->flag_Finish);
-
 }
 
 /* ===== RUTINAS DE INTERFAZ ====== */
 /* Rutina para activar un canal. Indica si se pudo activar. */
 
-//Actualza el digito presenta en las unidades
-char update_u(Dp_Control *dp,char digit){
+// Actualza el digito presenta en las unidades
+char update_u(Dp_Control *dp, char digit)
+{
 
-    if(digit>9)
+    if (digit > 9)
         return NO;
 
-    dp->digitU=digit;
+    dp->digitU = digit;
     return SI;
 }
-//Actualza el digito presenta en las decenas
-char update_d(Dp_Control *dp,char digit){
+// Actualza el digito presenta en las decenas
+char update_d(Dp_Control *dp, char digit)
+{
 
-    if(digit>9)
+    if (digit > 9)
         return NO;
 
-    dp->digitD=digit;
+    dp->digitD = digit;
     return SI;
 }
-//Actualza el digito presenta en las centenas
-char update_c(Dp_Control *dp, char digit){
+// Actualza el digito presenta en las centenas
+char update_c(Dp_Control *dp, char digit)
+{
 
-    if(digit>9)
+    if (digit > 9)
         return NO;
 
-    dp->digitC=digit;
+    dp->digitC = digit;
     return SI;
 }
-//Actualza el flag de finalización de envío
-char update_flag_finish(Dp_Control *dp, char status_flag){
+// Actualza el flag de finalización de envío
+char update_flag_finish(Dp_Control *dp, char status_flag)
+{
 
-    dp->flag_Finish=status_flag;
+    dp->flag_Finish = status_flag;
     return SI;
 }
-//Actualza el flag de fallas y titilación
-char update_flag_fallas(Dp_Control *dp, char status_flag){
+// Actualza el flag de fallas y titilación
+char update_flag_fallas(Dp_Control *dp, char status_flag)
+{
 
-    dp->flag_Falla=status_flag;
+    dp->flag_Falla = status_flag;
     return SI;
 }
 /* == FIN DE RUTINAS DE INTERFAZ == */

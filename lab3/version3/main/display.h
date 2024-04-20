@@ -48,7 +48,7 @@ struct Dp_Control
                
    
    /* Almacena el número a imprimir en las unidades */
-   unsigned char digitU;
+    unsigned char digitU;
    /* Almacena el número a imprimir en las decenas */
    unsigned char digitD;
    /* Almacena el número a imprimir en las centenas */
