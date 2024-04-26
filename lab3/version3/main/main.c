@@ -40,20 +40,17 @@ gpio_set_direction(CONFIG_GPIO_DIGIT_2, GPIO_MODE_OUTPUT);
 
     while(1){
         
-        if ( Atender_timer(NO) )
+        if ( Atender_timer(NO) ){
             Tm_Procese(&c_tiempo);
+        }
 
         if (Tm_Hubo_periodo(&c_tiempo,0) )
         {
             Dp_Procese (&c_display);
             Tm_Baje_periodo (&c_tiempo,0);
         } 
-
     }
 
     }
-
-
-
 
 

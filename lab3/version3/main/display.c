@@ -1,4 +1,4 @@
-/* display.c    implementaci�n del módulo Display */
+/* display.c    implementación del módulo Display */
 
 #include "display.h"
 
@@ -14,7 +14,8 @@ char Dp_Inicie(Dp_Control *dp, Tm_Num n_periodo)
 {
 
     // Inicializar variables
-    dp->flag_Finish = dp->flag_Falla = 0;
+    dp->flag_Finish=0;
+    dp->flag_Falla = 1;
     // Inicializar los números a imprimir
     // dp->digitU =NUM_MUERTO;
     // dp->digitD =NUM_MUERTO;
@@ -73,13 +74,13 @@ char print_digit(char digit)
 
             // Apagar pines
             gpio_set_level(pins[i], 1);
-            printf("0");
+            //printf("0");
         }
         else
         {
             // Encender pines
             gpio_set_level(pins[i], 0);
-            printf("1");
+            //printf("1");
         }
     }
 
@@ -89,33 +90,37 @@ char print_digit(char digit)
 // Se encarga de controlar la lógica que regula la impresión del digito de salida con base en las banderas
 char send_digits_display(char digit, char flag_falla, char flag_finish)
 {
-    // Variable auxliar
-    static int cont = 0;
+    // Variables auxliares
+    static int cont1 = 0;
+    static int cont2= 0;
 
-    // Baja intensidad
+    // Baja intensidad error 1
     if (flag_falla == 1)
     {
-        cont++;
-        if (cont > PERIODO_T1)
+        cont1++;
+        if (cont1 > PERIODO_T1)
         {
-            cont = 0;
+            cont1 = 0;
         }
         else
         {
             digit = NUM_MUERTO;
         }
+        printf("el valor es igual a :");
+        printf(cont1);
     }
     else
     {
-        cont = 0;
+        cont1 = 0;
     }
 
+    // Baja intensidad error 2
     if (flag_falla == 2)
     {
-        cont++;
-        if (cont > PERIODO_T2)
+        cont2++;
+        if (cont2 > PERIODO_T2)
         {
-            cont = 0;
+            cont2 = 0;
         }
         else
         {
@@ -124,7 +129,7 @@ char send_digits_display(char digit, char flag_falla, char flag_finish)
     }
     else
     {
-        cont = 0;
+        cont2 = 0;
     }
 
     // Fin de envío
@@ -150,7 +155,7 @@ void Dp_Procese(Dp_Control *dp)
     {
         dp->mul = 1;
     }
-    
+
     switch (dp->mul)
     {
         case (1):
@@ -178,11 +183,11 @@ void Dp_Procese(Dp_Control *dp)
             digit = NUM_MUERTO;
             gpio_set_level(CONFIG_GPIO_DIGIT_0, 1);
             gpio_set_level(CONFIG_GPIO_DIGIT_1, 1);
-            gpio_set_level(CONFIG_GPIO_DIGIT_2, 0);
+            gpio_set_level(CONFIG_GPIO_DIGIT_2, 1);
         break;
     }
 
-    //
+    // imprimir el digito
     send_digits_display(digit, dp->flag_Falla, dp->flag_Finish);
 }
 
@@ -199,6 +204,7 @@ char update_u(Dp_Control *dp, char digit)
     dp->digitU = digit;
     return SI;
 }
+
 // Actualza el digito presenta en las decenas
 char update_d(Dp_Control *dp, char digit)
 {
@@ -209,6 +215,7 @@ char update_d(Dp_Control *dp, char digit)
     dp->digitD = digit;
     return SI;
 }
+
 // Actualza el digito presenta en las centenas
 char update_c(Dp_Control *dp, char digit)
 {
@@ -219,6 +226,7 @@ char update_c(Dp_Control *dp, char digit)
     dp->digitC = digit;
     return SI;
 }
+
 // Actualza el flag de finalización de envío
 char update_flag_finish(Dp_Control *dp, char status_flag)
 {
@@ -226,6 +234,7 @@ char update_flag_finish(Dp_Control *dp, char status_flag)
     dp->flag_Finish = status_flag;
     return SI;
 }
+
 // Actualza el flag de fallas y titilación
 char update_flag_fallas(Dp_Control *dp, char status_flag)
 {
@@ -233,4 +242,5 @@ char update_flag_fallas(Dp_Control *dp, char status_flag)
     dp->flag_Falla = status_flag;
     return SI;
 }
+
 /* == FIN DE RUTINAS DE INTERFAZ == */

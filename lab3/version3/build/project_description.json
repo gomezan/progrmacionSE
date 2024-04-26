@@ -1,7 +1,7 @@
 {
     "version":            "1.1",
     "project_name":       "version3",
-    "project_version":    "45ad3c5c",
+    "project_version":    "7366b5e1-dirty",
     "project_path":       "C:/Users/aulasingenieria/Documents/GitHub/progrmacionSE/lab3/version3",
     "idf_path":           "C:/Users/aulasingenieria/esp/v5.2.1/esp-idf",
     "build_dir":          "C:/Users/aulasingenieria/Documents/GitHub/progrmacionSE/lab3/version3/build",
@@ -805,7 +805,7 @@
             "managed_reqs": [],
             "managed_priv_reqs": [],
             "file": "C:/Users/aulasingenieria/Documents/GitHub/progrmacionSE/lab3/version3/build/esp-idf/main/libmain.a",
-            "sources": [ "C:/Users/aulasingenieria/Documents/GitHub/progrmacionSE/lab3/version3/main/main.c", "C:/Users/aulasingenieria/Documents/GitHub/progrmacionSE/lab3/version3/main/display.c", "C:/Users/aulasingenieria/Documents/GitHub/progrmacionSE/lab3/version3/main/presentacion.c", "C:/Users/aulasingenieria/Documents/GitHub/progrmacionSE/lab3/version3/main/Tiempo.c" ],
+            "sources": [ "C:/Users/aulasingenieria/Documents/GitHub/progrmacionSE/lab3/version3/main/Buffer.c", "C:/Users/aulasingenieria/Documents/GitHub/progrmacionSE/lab3/version3/main/main.c", "C:/Users/aulasingenieria/Documents/GitHub/progrmacionSE/lab3/version3/main/display.c", "C:/Users/aulasingenieria/Documents/GitHub/progrmacionSE/lab3/version3/main/presentacion.c", "C:/Users/aulasingenieria/Documents/GitHub/progrmacionSE/lab3/version3/main/Tiempo.c" ],
             "include_dirs": [ "." ]
         },
         "mbedtls": {

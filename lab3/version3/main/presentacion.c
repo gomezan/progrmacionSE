@@ -35,7 +35,7 @@ char P_Inicie (P_Control *p, Tm_Num n_periodo)
 
 //Función encargada de actualizar el paquete de interes
 char getPaquete(char *dp){
-    char llega_dato = 0;
+    Bf_data llega_dato;
     
     if(Bf_Bajar_Dato(&c_buffer,&llega_dato))
     {
