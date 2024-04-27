@@ -10,8 +10,8 @@
 // Variables para manejar los pines del display
 #define CONFIG_GPIO_OUTPUT_0     GPIO_NUM_2
 #define CONFIG_GPIO_OUTPUT_1     GPIO_NUM_4
-#define CONFIG_GPIO_OUTPUT_2     GPIO_NUM_16
-#define CONFIG_GPIO_OUTPUT_3     GPIO_NUM_17
+#define CONFIG_GPIO_OUTPUT_2     GPIO_NUM_26
+#define CONFIG_GPIO_OUTPUT_3     GPIO_NUM_27
 #define CONFIG_GPIO_OUTPUT_4     GPIO_NUM_5 
 #define CONFIG_GPIO_OUTPUT_5     GPIO_NUM_18  
 #define CONFIG_GPIO_OUTPUT_6     GPIO_NUM_19

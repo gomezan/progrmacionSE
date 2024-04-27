@@ -14,8 +14,8 @@ char Dp_Inicie(Dp_Control *dp, Tm_Num n_periodo)
 {
 
     // Inicializar variables
-    dp->flag_Finish=0;
-    dp->flag_Falla = 1;
+    dp->flag_Finish=1;
+    dp->flag_Falla =1;
     // Inicializar los números a imprimir
     // dp->digitU =NUM_MUERTO;
     // dp->digitD =NUM_MUERTO;
