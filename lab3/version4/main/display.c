@@ -15,15 +15,15 @@ char Dp_Inicie(Dp_Control *dp, Tm_Num n_periodo)
 
     // Inicializar variables
     dp->flag_Finish=0;
-    dp->flag_Falla =1;
+    dp->flag_Falla =0;
     // Inicializar los números a imprimir
-    //dp->digitU =NUM_MUERTO;
-    //dp->digitD =NUM_MUERTO;
-    //dp->digitC =NUM_MUERTO;
+    dp->digitU =NUM_MUERTO;
+    dp->digitD =NUM_MUERTO;
+    dp->digitC =NUM_MUERTO;
 
-    dp->digitU = 3;
-    dp->digitD = 2;
-    dp->digitC = 1;
+    //dp->digitU = 3;
+    //dp->digitD = 2;
+    //dp->digitC = 1;
 
     // Inica la posición nula
     dp->mul = 0x00;
