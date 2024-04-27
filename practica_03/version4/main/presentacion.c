@@ -7,7 +7,7 @@ extern Tm_Control c_tiempo;
 extern Dp_Control c_display;
 extern Buffer_Control  c_buff;
 
-#define PERIODO_BASE    4  // 120 Hz
+#define PERIODO_BASE    3  // 120 Hz
 
 
 /* Rutina para iniciar el módulo (su estructura de datos) */   
