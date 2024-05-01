@@ -12,7 +12,6 @@
 #include <inttypes.h>
 #include "Buffer.h"
 #include "Tiempo.h"
-//No olvidar
 #include "display.h"
 #include "presentacion.h"
 #include "hal/timer_ll.h"

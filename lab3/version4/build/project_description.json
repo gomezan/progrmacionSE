@@ -1,7 +1,7 @@
 {
     "version":            "1.1",
     "project_name":       "version3",
-    "project_version":    "17f1a050-dirty",
+    "project_version":    "ae231fc1-dirty",
     "project_path":       "C:/Users/aulasingenieria/Documents/GitHub/progrmacionSE/lab3/version4",
     "idf_path":           "C:/Users/aulasingenieria/esp/v5.2.1/esp-idf",
     "build_dir":          "C:/Users/aulasingenieria/Documents/GitHub/progrmacionSE/lab3/version4/build",
