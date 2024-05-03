@@ -24,6 +24,8 @@ struct P_Control
    unsigned char digitD;
    /* Almacena el número a imprimir en las centenas */
    unsigned char digitC;
+   /* Divisor de frecuencia */
+   unsigned char N;
                
    /* Interfaz al módulo de tiempo */
    Tm_Num   n_periodo, n_to;
@@ -32,7 +34,7 @@ struct P_Control
    
 /* ======= Rutinas ======== */
 /* Rutina para iniciar el módulo (su estructura de datos) */   
-char P_Inicie (P_Control *p, Tm_Num n_periodo, Tm_Num n_to);
+char P_Inicie (P_Control *p, Tm_Num n_periodo, Tm_Num n_to, unsigned char N);
                   
 /* Rutina para procesar el módulo (dentro del loop de polling) */				
 void P_Procese (P_Control *p);
@@ -45,6 +47,11 @@ void P_Procese (P_Control *p);
 char update_finish(P_Control *p, char status_flag);
 //Actualza el flag de fallas y titilación
 char update_fallas(P_Control *p, char status_flag);
+
+//Incrementa el valor de N
+char increment_divisor(P_Control *p);
+//Decrementa el valor de N
+char decrement_divisor_N(P_Control *p);
 
 /* == FIN DE RUTINAS DE INTERFAZ == */
 

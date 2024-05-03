@@ -33,11 +33,12 @@ char Bt_Inicie(Bt_Control *bt, int puerto ,Tm_Num n_periodo, Tm_Num n_to, Bt_pro
     return SI;
 };
 
-
+//Interfaz que permite incrementar el valor de N
 void increment_N(){
     print_digit(0);
 }
 
+//Interfaz que permite decrementar el valor de N
 void decrement_N(){
     print_digit(1);
 }

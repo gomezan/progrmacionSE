@@ -7,11 +7,15 @@ extern Tm_Control c_tiempo;
 extern Dp_Control c_display;
 extern Buffer_Control  c_buff;
 
-#define PERIODO_BASE    4  // 120 Hz
 
+/* Rutina para calcular la frecuencia de operacion. */
+char calcularFreq(P_Control *p){
+    //IMPORTANTE NO OLVIDAR BAUDIOS
+    return 1/20*p->N;
+}
 
 /* Rutina para iniciar el módulo (su estructura de datos) */   
-char P_Inicie (P_Control *p, Tm_Num n_periodo, Tm_Num n_to)
+char P_Inicie (P_Control *p, Tm_Num n_periodo, Tm_Num n_to, unsigned char N)
    {
 
     //Inicializar variables
@@ -23,10 +27,13 @@ char P_Inicie (P_Control *p, Tm_Num n_periodo, Tm_Num n_to)
    p->digitD=0;
    /* Almacena el número a imprimir en las centenas */
    p->digitC=0;
+    /* Divisor de frecuencia */
+    p->N=N;
 
    //Inicializar periodo
+   
    p->n_periodo = n_periodo;
-   if ( !Tm_Inicie_periodo(&c_tiempo, n_periodo, PERIODO_BASE) )
+   if ( !Tm_Inicie_periodo(&c_tiempo, n_periodo, calcularFreq(p)) )
       return NO;
 
 
@@ -54,12 +61,6 @@ void decodificar(P_Control *p, char digit){
     p->digitU = (char)(digit%10);
     p->digitD = (char)((digit/10)%10);
     p->digitC = (char)(digit/100);
-
-    /*
-    p->digitU=5;
-    p->digitD=5;
-    p->digitC=2;
-    */
 
 }
 
@@ -113,7 +114,6 @@ void P_Procese (P_Control *p){
 }
 
 /* ===== RUTINAS DE INTERFAZ ====== */
-/* Rutina para activar un canal. Indica si se pudo activar. */
 
 
 //Actualza el flag de finalización de envío
@@ -128,4 +128,31 @@ char update_fallas(P_Control *p, char status_flag){
     p->flag_Falla=status_flag;
     return SI;
 }
+
+//Incrementa el valor de N
+char increment_divisor(P_Control *p){
+    p->N++;
+    if(p->N>5){
+        p->N=5;
+    }
+
+    if ( !Tm_Inicie_periodo(&c_tiempo, p->n_periodo, calcularFreq(p)) )
+      return NO;
+
+    return SI;
+}
+
+//Decremente el valor de N
+char decrement_divisor(P_Control *p){
+    p->N--;
+    if(p->N<1){
+        p->N=1;
+    }
+
+    if ( !Tm_Inicie_periodo(&c_tiempo, p->n_periodo, calcularFreq(p)) )
+      return NO;
+
+    return SI;
+}
+
 /* == FIN DE RUTINAS DE INTERFAZ == */
