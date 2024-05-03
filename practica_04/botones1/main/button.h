@@ -4,8 +4,11 @@
 #define  BUTTON_H
 
 #include "Tiempo.h"
+#include "presentacion.h"
 #include "Varios.h"
 #include "driver/gpio.h"
+//No olvidar!!!!!!
+#include "display.h"
 
 // Variables para manejar los pines del display
 #define CONFIG_GPIO_INPUT_0     GPIO_NUM_35
@@ -44,6 +47,12 @@ char Bt_Inicie (Bt_Control *bt, int puerto ,Tm_Num n_periodo, Tm_Num n_to, Bt_pr
 void Bt_Procese (Bt_Control *bt);
 
 /* ===== RUTINAS DE INTERFAZ ====== */
+
+//Interfaz que permite incrementar el valor de N
+void increment_N();
+
+//Interfaz que permite decrementar el valor de N
+void decrement_N();
 
 /* == FIN DE RUTINAS DE INTERFAZ == */
 

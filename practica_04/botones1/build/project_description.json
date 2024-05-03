@@ -1,7 +1,7 @@
 {
     "version":            "1.1",
     "project_name":       "version3",
-    "project_version":    "7d380d51-dirty",
+    "project_version":    "bd4683e7-dirty",
     "project_path":       "C:/Users/aulasingenieria/Documents/GitHub/progrmacionSE/practica_04/botones1",
     "idf_path":           "C:/Users/aulasingenieria/esp/v5.2.1/esp-idf",
     "build_dir":          "C:/Users/aulasingenieria/Documents/GitHub/progrmacionSE/practica_04/botones1/build",
@@ -805,7 +805,7 @@
             "managed_reqs": [],
             "managed_priv_reqs": [],
             "file": "C:/Users/aulasingenieria/Documents/GitHub/progrmacionSE/practica_04/botones1/build/esp-idf/main/libmain.a",
-            "sources": [ "C:/Users/aulasingenieria/Documents/GitHub/progrmacionSE/practica_04/botones1/main/uart_project.c", "C:/Users/aulasingenieria/Documents/GitHub/progrmacionSE/practica_04/botones1/main/xmodem.c", "C:/Users/aulasingenieria/Documents/GitHub/progrmacionSE/practica_04/botones1/main/display.c", "C:/Users/aulasingenieria/Documents/GitHub/progrmacionSE/practica_04/botones1/main/Tiempo.c", "C:/Users/aulasingenieria/Documents/GitHub/progrmacionSE/practica_04/botones1/main/Buffer.c", "C:/Users/aulasingenieria/Documents/GitHub/progrmacionSE/practica_04/botones1/main/main.c", "C:/Users/aulasingenieria/Documents/GitHub/progrmacionSE/practica_04/botones1/main/presentacion.c" ],
+            "sources": [ "C:/Users/aulasingenieria/Documents/GitHub/progrmacionSE/practica_04/botones1/main/button.c", "C:/Users/aulasingenieria/Documents/GitHub/progrmacionSE/practica_04/botones1/main/uart_project.c", "C:/Users/aulasingenieria/Documents/GitHub/progrmacionSE/practica_04/botones1/main/xmodem.c", "C:/Users/aulasingenieria/Documents/GitHub/progrmacionSE/practica_04/botones1/main/display.c", "C:/Users/aulasingenieria/Documents/GitHub/progrmacionSE/practica_04/botones1/main/Tiempo.c", "C:/Users/aulasingenieria/Documents/GitHub/progrmacionSE/practica_04/botones1/main/Buffer.c", "C:/Users/aulasingenieria/Documents/GitHub/progrmacionSE/practica_04/botones1/main/main.c", "C:/Users/aulasingenieria/Documents/GitHub/progrmacionSE/practica_04/botones1/main/presentacion.c" ],
             "include_dirs": [ "." ]
         },
         "mbedtls": {

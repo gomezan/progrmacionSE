@@ -60,6 +60,8 @@ Buffer_Control c_buff;
 Tm_Control c_tiempo;
 Dp_Control c_display;
 P_Control c_presentacion;
+Bt_Control c_botonesInc;
+Bt_Control c_botonesDec;
 
 void app_main(void)
 {
@@ -87,7 +89,7 @@ void app_main(void)
     Tm_Initialize_Timer_0();
 
     Tm_Periodo periodos[3];
-    Tm_Timeout timeouts[3];
+    Tm_Timeout timeouts[4];
 
     Bf_data data[SIZE_BUFFER] = {};
 
@@ -95,17 +97,20 @@ void app_main(void)
 
     Bf_Inicie(&c_buff,data,SIZE_BUFFER);
     Tm_Inicie(&c_tiempo,periodos,3,timeouts,3,Atender_timer);
-
+    
     // Cada 360 Hz
     // Actualizar el valor de multiplexación
     Tm_Inicie_periodo (&c_tiempo,0,1);
 
     // Cada 120 Hz
     // Actualizar el valor de los digitos en presentacion
-    Tm_Inicie_periodo (&c_tiempo,1,3);
+    Tm_Inicie_periodo (&c_tiempo,1,1);
 
-    Dp_Inicie(&c_display, 0);
-    P_Inicie(&c_presentacion, 1,2);
+    //Dp_Inicie(&c_display, 0);
+    //P_Inicie(&c_presentacion, 1,2);
+    Bt_Inicie(&c_botonesInc,CONFIG_GPIO_INPUT_0,0,2,increment_N);
+    Bt_Inicie(&c_botonesDec,CONFIG_GPIO_INPUT_1,1,1,decrement_N);
+
     
     uart0_config(2400,17,16); // Configura UART0 a 2400 baudios tx 17 y rx 16
 
@@ -130,20 +135,24 @@ void app_main(void)
         {
             //gpio_set_level(GPIO_OUTPUT_IO_0,cnt%2);
             //Dp_Procese (&c_display);
-            if(gpio_get_level(GPIO_NUM_35)==1){
+            /*if(gpio_get_level(GPIO_NUM_35)==1){
                 print_digit(1);
 
             }
+            */
+            Bt_Procese(&c_botonesInc);
             Tm_Baje_periodo(&c_tiempo,0);
         }
 
         if (Tm_Hubo_periodo(&c_tiempo,1) )
         {
             //P_Procese (&c_presentacion);
-            if(gpio_get_level(GPIO_NUM_32)==1){
+            /*if(gpio_get_level(GPIO_NUM_32)==1){
                 print_digit(0);
 
             }
+            */
+            Bt_Procese(&c_botonesDec);
             Tm_Baje_periodo(&c_tiempo,1);
         }
 
