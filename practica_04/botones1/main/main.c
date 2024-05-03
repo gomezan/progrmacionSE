@@ -13,6 +13,7 @@
 #include "Buffer.h"
 #include "Tiempo.h"
 #include "display.h"
+#include "button.h"
 #include "presentacion.h"
 #include "hal/timer_ll.h"
 #include "hal/mwdt_ll.h"
@@ -78,8 +79,8 @@ void app_main(void)
     gpio_set_direction(CONFIG_GPIO_DIGIT_2, GPIO_MODE_OUTPUT);
 
     //botones
-    gpio_set_direction(GPIO_NUM_35, GPIO_MODE_INPUT);
-    gpio_set_direction(GPIO_NUM_32, GPIO_MODE_INPUT);
+    gpio_set_direction(CONFIG_GPIO_INPUT_0, GPIO_MODE_INPUT);
+    gpio_set_direction(CONFIG_GPIO_INPUT_1, GPIO_MODE_INPUT);
 
 
 
@@ -129,14 +130,20 @@ void app_main(void)
         {
             //gpio_set_level(GPIO_OUTPUT_IO_0,cnt%2);
             //Dp_Procese (&c_display);
-            //print_digit(1);
+            if(gpio_get_level(GPIO_NUM_35)==1){
+                print_digit(1);
+
+            }
             Tm_Baje_periodo(&c_tiempo,0);
         }
 
         if (Tm_Hubo_periodo(&c_tiempo,1) )
         {
             //P_Procese (&c_presentacion);
-            //print_digit(5);
+            if(gpio_get_level(GPIO_NUM_32)==1){
+                print_digit(0);
+
+            }
             Tm_Baje_periodo(&c_tiempo,1);
         }
 
