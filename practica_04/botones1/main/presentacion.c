@@ -10,12 +10,11 @@ extern Buffer_Control  c_buff;
 
 /* Rutina para calcular la frecuencia de operacion. */
 char calcularFreq(P_Control *p){
-    //IMPORTANTE NO OLVIDAR BAUDIOS
-    return 1/20*p->N;
+    return ((2400)/(20*(p->N)));
 }
 
 /* Rutina para iniciar el módulo (su estructura de datos) */   
-char P_Inicie (P_Control *p, Tm_Num n_periodo, Tm_Num n_to, unsigned char N)
+char P_Inicie (P_Control *p, Tm_Num n_periodo, Tm_Num n_to)
    {
 
     //Inicializar variables
@@ -28,7 +27,7 @@ char P_Inicie (P_Control *p, Tm_Num n_periodo, Tm_Num n_to, unsigned char N)
    /* Almacena el número a imprimir en las centenas */
    p->digitC=0;
     /* Divisor de frecuencia */
-    p->N=N;
+    p->N=1;
 
    //Inicializar periodo
    
@@ -134,11 +133,10 @@ char increment_divisor(P_Control *p){
     p->N++;
     if(p->N>5){
         p->N=5;
+    } else{
+        if ( !Tm_Inicie_periodo(&c_tiempo, p->n_periodo, calcularFreq(p)) )
+        return NO;
     }
-
-    if ( !Tm_Inicie_periodo(&c_tiempo, p->n_periodo, calcularFreq(p)) )
-      return NO;
-
     return SI;
 }
 
@@ -147,11 +145,11 @@ char decrement_divisor(P_Control *p){
     p->N--;
     if(p->N<1){
         p->N=1;
+    } else{
+
+        if ( !Tm_Inicie_periodo(&c_tiempo, p->n_periodo, calcularFreq(p)) )
+        return NO;
     }
-
-    if ( !Tm_Inicie_periodo(&c_tiempo, p->n_periodo, calcularFreq(p)) )
-      return NO;
-
     return SI;
 }
 

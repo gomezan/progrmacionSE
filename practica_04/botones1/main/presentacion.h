@@ -34,7 +34,7 @@ struct P_Control
    
 /* ======= Rutinas ======== */
 /* Rutina para iniciar el módulo (su estructura de datos) */   
-char P_Inicie (P_Control *p, Tm_Num n_periodo, Tm_Num n_to, unsigned char N);
+char P_Inicie (P_Control *p, Tm_Num n_periodo, Tm_Num n_to);
                   
 /* Rutina para procesar el módulo (dentro del loop de polling) */				
 void P_Procese (P_Control *p);
