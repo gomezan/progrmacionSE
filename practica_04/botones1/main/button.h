@@ -12,7 +12,7 @@
 
 // Variables para manejar los pines del display
 #define CONFIG_GPIO_INPUT_0     GPIO_NUM_35
-#define CONFIG_GPIO_INPUT_1     GPIO_NUM_32
+#define CONFIG_GPIO_INPUT_1     GPIO_NUM_34
 
 //
 typedef char Bt_procesar ();
